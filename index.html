@@ -9,382 +9,3136 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-0: oklch(0.14 0.008 250);
-    --bg-1: oklch(0.18 0.009 250);
-    --bg-2: oklch(0.21 0.010 250);
-    --bg-3: oklch(0.25 0.011 250);
-    --line: oklch(0.30 0.010 250);
+    /* base */
+    --bg-0: oklch(0.14 0.008 250);       /* deepest — app background */
+    --bg-1: oklch(0.18 0.009 250);       /* sidebar / header */
+    --bg-2: oklch(0.21 0.010 250);       /* cards */
+    --bg-3: oklch(0.25 0.011 250);       /* hover / raised */
+    --line: oklch(0.30 0.010 250);       /* dividers */
     --line-soft: oklch(0.25 0.010 250);
-    --fg-0: oklch(0.97 0.005 250);
-    --fg-1: oklch(0.78 0.008 250);
-    --fg-2: oklch(0.58 0.010 250);
-    --fg-3: oklch(0.42 0.010 250);
+
+    /* text */
+    --fg-0: oklch(0.97 0.005 250);       /* primary */
+    --fg-1: oklch(0.78 0.008 250);       /* secondary */
+    --fg-2: oklch(0.58 0.010 250);       /* tertiary / labels */
+    --fg-3: oklch(0.42 0.010 250);       /* muted */
+
+    /* accents */
     --amber: oklch(0.80 0.14 75);
-    --amber-dim: oklch(0.80 0.14 75 / 0.18);
-    --cyan: oklch(0.76 0.11 210);
+    --amber-dim: oklch(0.80 0.14 75 / 0.15);
+    --cyan:  oklch(0.76 0.11 210);
     --cyan-dim: oklch(0.76 0.11 210 / 0.15);
-    --pos: oklch(0.78 0.13 150);
-    --neg: oklch(0.70 0.18 25);
+    --pos:   oklch(0.78 0.13 150);
+    --neg:   oklch(0.70 0.18 25);
+
     --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
     --sans: "Inter", system-ui, -apple-system, "Segoe UI", Helvetica, sans-serif;
   }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  html, body { margin: 0; padding: 0; height: 100%; }
   body {
-    background: var(--bg-0); color: var(--fg-0);
-    font-family: var(--sans); font-size: 13px; line-height: 1.45;
-    -webkit-font-smoothing: antialiased; letter-spacing: -0.005em;
+    background: var(--bg-0);
+    color: var(--fg-0);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.005em;
+  }
+
+  /* ===== App shell ===== */
+  .app {
+    display: grid;
+    grid-template-rows: 56px 1fr;
+    grid-template-columns: 260px 1fr;
+    grid-template-areas:
+      "header header"
+      "sidebar main";
+    height: 100vh;
     min-height: 100vh;
   }
 
+  /* ===== Header ===== */
   .hd {
-    background: var(--bg-1); border-bottom: 1px solid var(--line);
-    padding: 14px 32px; display: flex; align-items: center; gap: 24px;
+    grid-area: header;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 20px;
   }
   .hd__brand {
     display: flex; align-items: center; gap: 10px;
-    padding-right: 24px; border-right: 1px solid var(--line);
+    padding-right: 20px;
+    border-right: 1px solid var(--line);
+    height: 100%;
+    width: 240px;
+    margin-left: -20px;
+    padding-left: 20px;
   }
   .hd__mark {
     width: 22px; height: 22px;
-    border: 1.5px solid var(--amber); position: relative; transform: rotate(45deg);
+    border: 1.5px solid var(--amber);
+    position: relative;
+    transform: rotate(45deg);
   }
   .hd__mark::after {
-    content: ""; position: absolute; inset: 3px;
-    background: var(--amber); opacity: 0.6;
+    content: "";
+    position: absolute; inset: 3px;
+    background: var(--amber);
+    opacity: 0.6;
   }
   .hd__wordmark {
-    font-family: var(--mono); font-size: 11px; font-weight: 600;
-    letter-spacing: 0.18em; color: var(--fg-1); text-transform: uppercase;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--fg-1);
+    text-transform: uppercase;
   }
   .hd__title {
-    font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: var(--fg-0);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--fg-0);
   }
   .hd__title small {
-    display: block; font-size: 10px; font-family: var(--mono);
-    font-weight: 500; color: var(--fg-2); letter-spacing: 0.12em;
-    text-transform: uppercase; margin-top: 2px;
+    display: block;
+    font-size: 10px;
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--fg-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
   }
   .hd__spacer { flex: 1; }
   .hd__meta {
-    display: flex; align-items: center; gap: 18px; font-family: var(--mono);
-    font-size: 11px; color: var(--fg-2); letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-2);
   }
-  .hd__meta b { color: var(--fg-0); font-weight: 600; }
-  .hd__pill {
-    display: inline-block; padding: 3px 8px; background: var(--amber-dim);
-    color: var(--amber); border-radius: 3px; font-weight: 600;
+  .hd__meta .lbl { color: var(--fg-3); margin-right: 6px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hd__meta .val { color: var(--fg-0); }
+  .pulse {
+    display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pos);
+    margin-right: 8px;
+    box-shadow: 0 0 0 0 var(--pos);
+    animation: pulse 2s infinite;
   }
-
-  .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
-  .section { margin-bottom: 36px; }
-  .section__title {
-    display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
-    padding-bottom: 8px; border-bottom: 1px solid var(--line-soft);
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 oklch(0.78 0.13 150 / 0.5); }
+    70%  { box-shadow: 0 0 0 6px oklch(0.78 0.13 150 / 0); }
+    100% { box-shadow: 0 0 0 0 oklch(0.78 0.13 150 / 0); }
   }
-  .section__title h2 {
-    margin: 0; font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
-    color: var(--fg-0); text-transform: uppercase;
-  }
-  .section__title small {
-    font-family: var(--mono); font-size: 11px; color: var(--fg-2);
-    letter-spacing: 0.05em;
-  }
-
-  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  .kpi {
-    background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px;
-    padding: 16px 18px;
-  }
-  .kpi__label {
-    font-family: var(--mono); font-size: 10px; color: var(--fg-2);
-    letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 8px;
-  }
-  .kpi__value {
-    font-family: var(--mono); font-size: 28px; font-weight: 600;
-    color: var(--fg-0); line-height: 1;
-  }
-  .kpi__sub {
-    margin-top: 6px; font-size: 11px; color: var(--fg-2); font-family: var(--mono);
-  }
-
-  .fn-row {
-    display: grid; grid-template-columns: 180px 1fr 60px;
-    align-items: center; gap: 12px; padding: 6px 0;
-  }
-  .fn-row__label { color: var(--fg-1); font-size: 12px; }
-  .fn-row__bar {
-    height: 8px; background: var(--bg-3); border-radius: 2px; position: relative;
-    overflow: hidden;
-  }
-  .fn-row__fill {
-    position: absolute; left: 0; top: 0; bottom: 0;
-    background: var(--cyan); border-radius: 2px;
-  }
-  .fn-row__fill--hot { background: var(--amber); }
-  .fn-row__count {
-    font-family: var(--mono); font-size: 12px; font-weight: 500;
-    color: var(--fg-0); text-align: right;
-  }
-
-  .co-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
-  }
-  .co {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: 6px; padding: 14px;
-  }
-  .co--hot { border-color: var(--amber); }
-  .co__hd {
+  .hd__user {
     display: flex; align-items: center; gap: 10px;
-    padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line-soft);
+    padding-left: 20px;
+    border-left: 1px solid var(--line);
+    height: 100%;
   }
-  .co__logo {
-    width: 32px; height: 32px; border-radius: 4px;
-    background: var(--bg-3); color: var(--fg-1);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--mono); font-size: 11px; font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-  .co__name { font-size: 13px; font-weight: 600; color: var(--fg-0); }
-  .co__zone {
-    font-family: var(--mono); font-size: 10px; color: var(--fg-2);
-    letter-spacing: 0.06em; margin-top: 2px;
-  }
-  .co__total {
-    margin-left: auto; font-family: var(--mono); font-size: 18px;
-    font-weight: 600; color: var(--fg-0);
-  }
-  .co--hot .co__total { color: var(--amber); }
-  .co__row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 4px 0; font-size: 12px;
-  }
-  .co__row span:first-child { color: var(--fg-1); }
-  .co__row span:last-child {
-    font-family: var(--mono); font-weight: 500; color: var(--fg-0);
-  }
-
-  .country-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 8px;
-  }
-  .country {
-    background: var(--bg-2); border: 1px solid var(--line); border-radius: 4px;
-    padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
-  }
-  .country__code {
-    font-family: var(--mono); font-size: 11px; font-weight: 600;
-    color: var(--fg-1); letter-spacing: 0.08em;
-  }
-  .country__count {
-    font-family: var(--mono); font-size: 14px; font-weight: 600;
+  .hd__avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg-3);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 600;
     color: var(--fg-0);
   }
+  .hd__role { font-size: 11px; color: var(--fg-2); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+  .hd__edit { font-size: 9px; color: var(--amber); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; white-space: nowrap; }
 
-  .ft {
-    margin-top: 48px; padding: 20px 32px; border-top: 1px solid var(--line);
-    color: var(--fg-2); font-family: var(--mono); font-size: 10px;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  /* ===== Sidebar ===== */
+  .sb {
+    grid-area: sidebar;
+    background: var(--bg-1);
+    border-right: 1px solid var(--line);
+    padding: 18px 12px;
+    overflow-y: auto;
+  }
+  .sb__section {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    padding: 8px 12px;
+    margin-top: 4px;
+  }
+  .sb__nav { display: flex; flex-direction: column; gap: 2px; }
+  .navbtn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 12px;
+    background: transparent;
+    border: none;
+    border-left: 2px solid transparent;
+    color: var(--fg-1);
+    font-family: var(--sans);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: background .12s, color .12s, border-color .12s;
+    width: 100%;
+  }
+  .navbtn:hover { background: var(--bg-2); color: var(--fg-0); }
+  .navbtn.is-active {
+    background: var(--bg-2);
+    color: var(--fg-0);
+    border-left-color: var(--amber);
+  }
+  .navbtn .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--fg-3);
+    min-width: 18px;
+    padding-top: 2px;
+  }
+  .navbtn.is-active .num { color: var(--amber); }
+  .navbtn .lbl { display: block; font-weight: 500; }
+  .navbtn .sub {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+    text-transform: uppercase;
   }
 
-  .empty {
-    background: var(--bg-2); border: 1px dashed var(--line);
-    border-radius: 6px; padding: 24px; color: var(--fg-2);
-    font-family: var(--mono); font-size: 12px; text-align: center;
+  .sb__foot {
+    margin-top: auto;
+    padding: 12px;
+    border-top: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
+  .sb__foot .row { display: flex; justify-content: space-between; }
+  .sb__foot .row b { color: var(--fg-1); font-weight: 500; }
+
+  .sb { display: flex; flex-direction: column; }
+  .sb__nav-wrap { flex: 1; }
+
+  /* ===== Main ===== */
+  .main {
+    grid-area: main;
+    overflow-y: auto;
+    padding: 24px 28px 40px;
+  }
+
+  .view-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 20px;
+  }
+  .view-head__left .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .view-head__left h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .view-head__left .desc {
+    margin-top: 6px;
+    color: var(--fg-2);
+    font-size: 12px;
+    max-width: 620px;
+  }
+  .view-head__right {
+    display: flex; gap: 8px;
+  }
+  .chip {
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    color: var(--fg-1);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .chip:hover { background: var(--bg-2); color: var(--fg-0); }
+  .chip.is-on { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+
+  /* KPI strip */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+  .kpi {
+    background: var(--bg-1);
+    padding: 16px 18px;
+  }
+  .kpi .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .kpi .val {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--fg-0);
+    letter-spacing: -0.01em;
+  }
+  .kpi .val .unit { font-size: 12px; color: var(--fg-2); margin-left: 4px; font-weight: 400; }
+  .kpi .delta {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .delta.up   { color: var(--pos); }
+  .delta.down { color: var(--neg); }
+  .delta .arr { margin-right: 4px; }
+
+  /* Content grid */
+  .grid {
+    display: grid;
+    gap: 16px;
+  }
+  .grid.cols-3 { grid-template-columns: 2fr 1fr; }
+  .grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+  .card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+  }
+  .card__hd {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card__hd h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .card__hd .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .card__bd { padding: 18px; }
+
+  /* placeholder plots */
+  .plot {
+    position: relative;
+    border: 1px dashed var(--line);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent 0 10px,
+        oklch(0.22 0.010 250 / 0.4) 10px 11px
+      ),
+      var(--bg-2);
+    display: grid; place-items: center;
+    color: var(--fg-3);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    min-height: 260px;
+  }
+  .plot--sm { min-height: 180px; }
+  .plot__label {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    padding: 6px 10px;
+    color: var(--fg-1);
+  }
+
+  /* Hub heatmap placeholder grid */
+  .heat {
+    display: grid;
+    grid-template-columns: 100px repeat(7, 1fr);
+    gap: 2px;
+  }
+  .heat__cell {
+    aspect-ratio: 1.2 / 1;
+    background: var(--bg-2);
+    display: grid; place-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fg-1);
+    position: relative;
+  }
+  .heat__cell.head {
+    background: transparent;
+    color: var(--fg-3);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    aspect-ratio: auto;
+    padding: 8px 0;
+  }
+  .heat__cell.rowlbl {
+    justify-content: flex-start;
+    padding-left: 4px;
+    background: transparent;
+    color: var(--fg-1);
+    font-size: 11px;
+  }
+  .heat__cell.v1 { background: oklch(0.80 0.14 75 / 0.08); }
+  .heat__cell.v2 { background: oklch(0.80 0.14 75 / 0.20); }
+  .heat__cell.v3 { background: oklch(0.80 0.14 75 / 0.40); color: var(--bg-0); }
+  .heat__cell.v4 { background: oklch(0.80 0.14 75 / 0.65); color: var(--bg-0); }
+  .heat__cell.v5 { background: oklch(0.80 0.14 75 / 0.88); color: var(--bg-0); }
+
+  /* League table */
+  table.tbl {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px;
+  }
+  .tbl th, .tbl td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .tbl th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    font-weight: 500;
+    border-bottom: 1px solid var(--line);
+  }
+  .tbl td.num, .tbl th.num { text-align: right; font-family: var(--mono); }
+  .tbl tr:hover td { background: var(--bg-2); }
+  .tbl .rank {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--amber);
+    width: 18px;
+  }
+  .bar {
+    display: inline-block;
+    vertical-align: middle;
+    height: 6px;
+    background: var(--cyan);
+    margin-right: 8px;
+    opacity: 0.7;
+  }
+
+  /* Flow list */
+  .flow {
+    display: flex;
+    flex-direction: column;
+  }
+  .flow__row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto 1fr 70px;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 12px;
+  }
+  .flow__row:last-child { border-bottom: none; }
+  .flow__date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.06em;
+  }
+  .flow__from, .flow__to {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .flow__org { color: var(--fg-0); font-weight: 500; }
+  .flow__loc {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .flow__arrow {
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .flow__amt {
+    text-align: right;
+    font-family: var(--mono);
+    color: var(--fg-1);
+    font-size: 11px;
+  }
+  .flow__to { text-align: left; }
+
+  /* Salary matrix */
+  .mtx {
+    display: grid;
+    grid-template-columns: 160px repeat(5, 1fr);
+    font-size: 11px;
+  }
+  .mtx__cell {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line-soft);
+    border-right: 1px solid var(--line-soft);
+    font-family: var(--mono);
+  }
+  .mtx__cell:last-child { border-right: none; }
+  .mtx__cell.head {
+    font-weight: 600;
+    color: var(--fg-2);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .mtx__cell.role {
+    color: var(--fg-0);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .mtx__cell .prem {
+    display: inline-block;
+    padding: 1px 6px;
+    margin-left: 6px;
+    font-size: 10px;
+    color: var(--amber);
+    border: 1px solid var(--amber);
+  }
+  .mtx__cell.hot {
+    color: var(--amber);
+    background: var(--amber-dim);
+  }
+
+  /* ===== Salary range chart ===== */
+  .rchart { padding: 8px 0 4px; }
+  .rchart__axis {
+    display: grid;
+    grid-template-columns: 280px 1fr 120px;
+    align-items: center;
+    padding: 8px 18px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .rchart__axis .ascale {
+    position: relative;
+    height: 18px;
+    margin-right: 8px;
+  }
+  .rchart__axis .ascale span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+  }
+  .rchart__axis .ascale span:first-child { transform: translateX(0); }
+  .rchart__axis .ascale span:last-child { transform: translateX(-100%); }
+  .rchart__axis .atick {
+    position: absolute;
+    left: 0; right: 0; top: 16px;
+    height: 1px;
+    background: var(--line-soft);
+  }
+  .rchart__axis .atick i {
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 4px;
+    background: var(--line);
+  }
+
+  .rrow {
+    display: grid;
+    grid-template-columns: 280px 1fr 120px;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line-soft);
+    transition: background 120ms ease;
+  }
+  .rrow:hover { background: var(--bg-3); }
+  .rrow:last-child { border-bottom: none; }
+
+  .rrow__role {
+    padding-right: 16px;
+  }
+  .rrow__role .rn {
+    color: var(--fg-0);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+  .rrow__role .rm {
+    color: var(--fg-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .rrow__plot {
+    position: relative;
+    height: 30px;
+    margin-right: 16px;
+  }
+  .rrow__plot::before {
+    /* baseline grid */
+    content: "";
+    position: absolute;
+    inset: 14px 0 14px 0;
+    background: repeating-linear-gradient(
+      to right,
+      transparent 0, transparent calc(10% - 1px),
+      var(--line-soft) calc(10% - 1px), var(--line-soft) 10%
+    );
+    opacity: 0.4;
+  }
+  .rbar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 10px;
+    display: flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+  }
+  .rbar.base {
+    background: var(--fg-3);
+    height: 6px;
+  }
+  .rbar.prem {
+    background: var(--amber);
+    height: 10px;
+    box-shadow: 0 0 0 1px var(--amber);
+  }
+  .rbar .rbar__cap {
+    position: absolute;
+    left: 100%;
+    padding-left: 6px;
+    white-space: nowrap;
+    color: var(--fg-1);
+  }
+  .rbar .rbar__cap.inside {
+    left: auto;
+    right: 6px;
+    padding-left: 0;
+    color: var(--bg-0);
+    font-weight: 600;
+    max-width: calc(100% - 12px);
+    overflow: hidden;
+    text-overflow: clip;
+  }
+  .rbar.prem .rbar__cap { color: var(--amber); font-weight: 600; }
+  .rbar.prem .rbar__cap.inside { color: var(--bg-0); }
+
+  .rdot {
+    position: absolute;
+    top: 50%;
+    width: 1px;
+    height: 14px;
+    background: var(--fg-3);
+    transform: translate(-50%, -50%);
+  }
+
+  .rrow__gap {
+    padding-left: 8px;
+    border-left: 1px solid var(--line-soft);
+  }
+  .rrow__gap .gpct {
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .rrow__gap .glbl {
+    color: var(--fg-2);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .rrow.is-hero .rrow__gap .gpct { color: var(--amber); }
+
+  .rlegend {
+    display: flex;
+    gap: 20px;
+    padding: 12px 18px;
+    border-top: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    align-items: center;
+  }
+  .rlegend .rsw {
+    display: inline-block;
+    width: 18px; height: 6px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .rlegend .rsw.base { background: var(--fg-3); }
+  .rlegend .rsw.prem { background: var(--amber); height: 10px; }
+
+  /* APAC: hide MENA case-study narrative blocks (Kanban + Executive Alerts) */
+  .narrative-hidden { display: none !important; }
+
+  /* ===== Country grid (APAC-specific) ===== */
+  .country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .country-card {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px;
+    padding: 12px 14px; transition: border-color 0.15s;
+  }
+  .country-card:hover { border-color: var(--line); }
+  .country-card.is-hot { border-color: var(--amber); }
+  .country-card__hd {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 6px;
+  }
+  .country-card__code {
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    color: var(--fg-0); letter-spacing: 0.06em;
+  }
+  .country-card__name {
+    font-family: var(--mono); font-size: 9px; color: var(--fg-2);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .country-card__total {
+    font-family: var(--mono); font-size: 22px; font-weight: 600;
+    color: var(--fg-0); line-height: 1.1;
+  }
+  .country-card.is-hot .country-card__total { color: var(--amber); }
+  .country-card__sub {
+    margin-top: 4px; font-family: var(--mono); font-size: 10px;
+    color: var(--fg-2); letter-spacing: 0.04em;
+  }
+
+  /* ===== Kanban — Urgent Reqs ===== */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .kcol {
+    background: var(--bg-1);
+    display: flex;
+    flex-direction: column;
+    min-height: 520px;
+  }
+  .kcol__hd {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .kcol__hd .kt {
+    color: var(--fg-0);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .kcol__hd .ksub {
+    color: var(--fg-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+  }
+  .kcol__hd .kcount {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--amber);
+    border: 1px solid var(--amber);
+    padding: 2px 7px;
+    letter-spacing: 0.06em;
+  }
+  .kcol__bd {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .kjob {
+    background: var(--bg-2);
+    border: 1px solid var(--line-soft);
+    border-left: 2px solid var(--fg-3);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+    cursor: pointer;
+  }
+  .kjob:hover {
+    background: var(--bg-3);
+    border-left-color: var(--amber);
+    transform: translateX(1px);
+  }
+  .kjob.is-hot { border-left-color: var(--amber); }
+  .kjob.is-hot .kjob__co { color: var(--amber); }
+
+  .kjob__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .kjob__co {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+  }
+  .kjob__age {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+  }
+  .kjob__age.new {
+    color: var(--amber);
+    border: 1px solid var(--amber);
+    padding: 1px 5px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .kjob__title {
+    color: var(--fg-0);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .kjob__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+    flex-wrap: wrap;
+  }
+  .kjob__meta .dot {
+    width: 2px; height: 2px;
+    background: var(--fg-3);
+    border-radius: 50%;
+  }
+  .kjob__pay {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .kjob__pay .pu {
+    color: var(--fg-2);
+    font-weight: 400;
+    font-size: 10px;
+    margin-left: 4px;
+  }
+  .kjob__tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .kjob__tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-1);
+    background: var(--bg-3);
+    padding: 2px 6px;
+    border: 1px solid var(--line-soft);
+  }
+  .kjob__tag.amber { color: var(--amber); border-color: var(--amber); background: transparent; }
+  .kjob__tag.cyan  { color: var(--cyan); border-color: var(--cyan);  background: transparent; }
+
+  .kjob__src {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 6px;
+    border-top: 1px dashed var(--line-soft);
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--fg-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .kjob__src b { color: var(--fg-1); font-weight: 500; }
+
+  /* ===== Free Zone duel layout ===== */
+  .duel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 16px;
+  }
+  .zone {
+    background: var(--bg-1);
+    display: flex;
+    flex-direction: column;
+  }
+  .zone__hd {
+    padding: 18px 20px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    position: relative;
+  }
+  .zone__hd::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .zone--difc .zone__hd::before { background: var(--amber); }
+  .zone--adgm .zone__hd::before { background: var(--cyan); }
+
+  .zone__eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    margin-bottom: 8px;
+  }
+  .zone__eyebrow .flag {
+    display: inline-block;
+    width: 18px; height: 12px;
+    background: var(--bg-3);
+    position: relative;
+    overflow: hidden;
+  }
+  /* UAE-adjacent flag placeholders — abstracted to stripes, NOT recreating the actual flag */
+  .zone--difc .zone__eyebrow .flag { background: var(--amber-dim); border: 1px solid var(--amber); }
+  .zone--adgm .zone__eyebrow .flag { background: var(--cyan-dim); border: 1px solid var(--cyan); }
+
+  .zone--difc .zone__eyebrow { color: var(--amber); }
+  .zone--adgm .zone__eyebrow { color: var(--cyan); }
+
+  .zone__name {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 4px;
+  }
+  .zone__name h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .zone__name .code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .zone__reg {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-2);
+    letter-spacing: 0.04em;
+  }
+
+  .zone__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .zone__stat {
+    background: var(--bg-1);
+    padding: 12px 20px;
+  }
+  .zone__stat .k {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .zone__stat .v {
+    font-family: var(--mono);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--fg-0);
+  }
+  .zone__stat .d {
+    font-family: var(--mono);
+    font-size: 10px;
+    margin-top: 2px;
+  }
+
+  .zone__bd { padding: 18px 20px 20px; flex: 1; }
+
+  .zone__section-title {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .zone__section-title h4 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg-0);
+  }
+  .zone__section-title .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Competitor bar chart */
+  .comp-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .comp {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .comp__head {
+    display: flex; flex-direction: column; gap: 4px;
+    padding-top: 2px;
+  }
+  .comp__logo {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .comp__mark {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--fg-0);
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+  }
+  .comp__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-0);
+  }
+  .comp__meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+  .comp__total {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-1);
+    margin-top: 4px;
+  }
+  .comp__total b { color: var(--fg-0); font-weight: 600; font-size: 14px; }
+
+  .bars {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .bars__row {
+    display: grid;
+    grid-template-columns: 1fr 32px;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+  .bars__track {
+    position: relative;
+    height: 22px;
+    background: var(--bg-2);
+    border: 1px solid transparent;
+    transition: border-color .15s, background .15s;
+  }
+  .bars__fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--cyan);
+    opacity: 0.55;
+    transition: opacity .15s;
+  }
+  .zone--difc .bars__fill { background: var(--amber); }
+  .zone--adgm .bars__fill { background: var(--cyan); }
+
+  .bars__label {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--fg-0);
+    white-space: nowrap;
+    z-index: 1;
+    font-weight: 500;
+  }
+  .bars__label .chtag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 5px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    vertical-align: 1px;
+  }
+  .bars__num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-1);
+    text-align: right;
+  }
+  .bars__row:hover .bars__track { border-color: var(--fg-2); background: var(--bg-3); }
+  .bars__row:hover .bars__fill { opacity: 0.85; }
+
+  .bars__row.is-hot .bars__track { box-shadow: inset 0 0 0 1px currentColor; }
+  .zone--difc .bars__row.is-hot { color: var(--amber); }
+  .zone--adgm .bars__row.is-hot { color: var(--cyan); }
+  .bars__row.is-hot .bars__label { color: currentColor; }
+  .bars__row.is-hot .bars__label .chtag { background: currentColor; color: var(--bg-0); border-color: currentColor; }
+
+  /* Zone signal strip */
+  .zone__signal {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: var(--bg-2);
+    border-left: 2px solid var(--fg-3);
+    font-size: 11px;
+    color: var(--fg-1);
+    line-height: 1.55;
+  }
+  .zone--difc .zone__signal { border-left-color: var(--amber); }
+  .zone--adgm .zone__signal { border-left-color: var(--cyan); }
+  .zone__signal b { color: var(--fg-0); font-weight: 600; }
+  .zone__signal .sig-tag {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 1px 6px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .zone--difc .zone__signal .sig-tag { color: var(--amber); border: 1px solid var(--amber); }
+  .zone--adgm .zone__signal .sig-tag { color: var(--cyan);  border: 1px solid var(--cyan); }
+
+  /* Custom tooltip */
+  .tt {
+    position: fixed;
+    z-index: 1000;
+    max-width: 320px;
+    background: var(--bg-0);
+    border: 1px solid var(--amber);
+    padding: 14px 16px;
+    box-shadow: 0 12px 40px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0 0 0 / 0.4);
+    font-size: 12px;
+    color: var(--fg-0);
+    line-height: 1.55;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .12s, transform .12s;
+  }
+  .tt.is-on { opacity: 1; transform: translateY(0); }
+  .tt.zone-adgm { border-color: var(--cyan); }
+  .tt__tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tt.zone-adgm .tt__tag { color: var(--cyan); }
+  .tt__tag::before {
+    content: "◆";
+    font-size: 10px;
+  }
+  .tt__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-0);
+    margin-bottom: 6px;
+    letter-spacing: -0.005em;
+  }
+  .tt__body {
+    color: var(--fg-1);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .tt__body b { color: var(--fg-0); font-weight: 600; }
+  .tt__foot {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  .tt__foot b { color: var(--fg-1); font-weight: 500; }
+
+  /* ===== Sankey flow diagram ===== */
+  .sankey-wrap {
+    position: relative;
+    padding: 8px 0;
+  }
+  .sankey-svg { display: block; width: 100%; height: auto; }
+
+  .snode rect {
+    transition: fill .15s, stroke .15s;
+  }
+  .snode text.label {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--fg-0);
+    letter-spacing: -0.005em;
+  }
+  .snode text.sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    fill: var(--fg-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .snode text.count {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--fg-1);
+  }
+
+  .slink {
+    fill: none;
+    stroke-opacity: 0.22;
+    transition: stroke-opacity .15s;
+    cursor: pointer;
+  }
+  .slink:hover { stroke-opacity: 0.75; }
+  .slink.dim   { stroke-opacity: 0.06; }
+
+  .slegend {
+    display: flex;
+    gap: 18px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .slegend .swatch {
+    display: inline-block;
+    width: 22px; height: 8px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* Key alerts table */
+  .alerts { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .alerts thead th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .alerts td {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+  .alerts tr:last-child td { border-bottom: none; }
+  .alerts tr:hover td { background: var(--bg-2); }
+
+  .alerts .alert-sev {
+    width: 4px;
+    padding: 0 !important;
+    border-bottom: none !important;
+  }
+  .alerts td.alert-sev { background: var(--neg); }
+  .alerts tr.sev-high    td.alert-sev { background: var(--neg); }
+  .alerts tr.sev-elevated td.alert-sev { background: var(--amber); }
+
+  .exec {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 220px;
+  }
+  .exec__av {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .exec__photo {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fg-0);
+    flex-shrink: 0;
+  }
+  .exec__n {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-0);
+    line-height: 1.3;
+  }
+  .exec__t {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .exec__tag {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 1px 6px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--neg);
+    border: 1px solid var(--neg);
+    align-self: flex-start;
+  }
+  tr.sev-elevated .exec__tag { color: var(--amber); border-color: var(--amber); }
+
+  .firm {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .firm__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-0);
+  }
+  .firm__meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .firm__tenure {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--fg-2);
+  }
+
+  .impact {
+    max-width: 360px;
+    line-height: 1.55;
+    color: var(--fg-1);
+  }
+  .impact b { color: var(--fg-0); font-weight: 600; }
+  .impact .imp-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--amber);
+  }
+
+  .arrow-col {
+    text-align: center;
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 16px;
+    padding: 18px 4px !important;
+  }
+
+  /* utility */
+  .view { display: none; }
+  .view.is-on { display: block; }
+
+  /* scrollbar subtle */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--bg-3); }
+  ::-webkit-scrollbar-track { background: var(--bg-0); }
 </style>
 </head>
 <body>
 
-<header class="hd">
-  <div class="hd__brand">
-    <div class="hd__mark"></div>
-    <div>
-      <div class="hd__wordmark">VT Markets</div>
-      <div class="hd__title">APAC Talent Mobility<small>HR Talent Intelligence</small></div>
+<div class="app">
+
+  <!-- ============ HEADER ============ -->
+  <header class="hd">
+    <div class="hd__brand">
+      <div class="hd__mark" aria-hidden="true"></div>
+      <div>
+        <div class="hd__title">APAC Talent Mobility Dashboard
+          <small>CHRO · Executive Intelligence</small>
+        </div>
+      </div>
     </div>
+
+    <div class="hd__spacer"></div>
+
+    <div class="hd__meta">
+      <div><span class="lbl">Region</span><span class="val">Asia-Pacific</span></div>
+      <div><span class="lbl">FX</span><span class="val">USD reference</span></div>
+      <div><span class="lbl">Period</span><span class="val">Q2 2026 · live</span></div>
+      <div>
+        <span class="pulse"></span>
+        <span class="lbl">Last sync</span>
+        <span class="val" id="lastSync">2026-04-21 09:42 GST</span>
+      </div>
+    </div>
+
+    <div class="hd__user">
+      <div class="hd__avatar">HR</div>
+      <div>
+        <div style="font-size:12px;font-weight:500">HR Team</div>
+        <div class="hd__role">VT Markets</div>
+        <div class="hd__edit">Edited by Rob</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sb">
+    <div class="sb__nav-wrap">
+      <div class="sb__section">Intelligence Views</div>
+      <nav class="sb__nav">
+        <button class="navbtn is-active" data-view="hub">
+          <span class="num">01</span>
+          <span>
+            <span class="lbl">Hub Heatmap</span>
+            <span class="sub">Hub Heatmap</span>
+          </span>
+        </button>
+        <button class="navbtn" data-view="flow">
+          <span class="num">02</span>
+          <span>
+            <span class="lbl">Mobility Flow</span>
+            <span class="sub">Mobility Flow</span>
+          </span>
+        </button>
+        <button class="navbtn" data-view="salary">
+          <span class="num">03</span>
+          <span>
+            <span class="lbl">Salary Premium Matrix</span>
+            <span class="sub">Salary Index</span>
+          </span>
+        </button>
+      </nav>
+
+      <div class="sb__section" style="margin-top:20px">Reference</div>
+      <nav class="sb__nav">
+        <button class="navbtn" disabled style="opacity:.5;cursor:default">
+          <span class="num">—</span>
+          <span><span class="lbl">Data sources</span><span class="sub">LinkedIn · DIFC · ADGM</span></span>
+        </button>
+        <button class="navbtn" disabled style="opacity:.5;cursor:default">
+          <span class="num">—</span>
+          <span><span class="lbl">Methodology</span><span class="sub">v2.1 · Mar 2026</span></span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sb__foot">
+      <div class="row"><span>Records</span><b>14,208</b></div>
+      <div class="row"><span>Coverage</span><b>6 hubs</b></div>
+      <div class="row"><span>Refresh</span><b>04h cycle</b></div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ---- VIEW 1: Hub Heatmap — ANZ vs Rest of APAC duel ---- -->
+    <section class="view is-on" data-view="hub">
+      <div class="view-head">
+        <div class="view-head__left">
+          <div class="eyebrow">01 · Hub Heatmap · ANZ vs Rest of APAC</div>
+          <h1>APAC Hub Heatmap — Australia / NZ vs Rest of APAC</h1>
+          <div class="desc">Australia is the centre of gravity for retail CFD hiring across Asia-Pacific — ASIC's licence regime concentrates ~33% of the region's open roles in Sydney and Melbourne alone. The right column gathers everything else: Singapore (MAS, regional HQs), Hong Kong (SFC), Tokyo, plus the ASEAN volume markets (Malaysia, Thailand, Vietnam, Philippines, Indonesia) and India. Below is the function-mix of live competitor openings across the two clusters — fed live from the cfd-talent-intel-core ATS feed.</div>
+        </div>
+        <div class="view-head__right">
+          <button class="chip is-on">Open Roles · 28D</button>
+          <button class="chip">Hire Velocity</button>
+          <button class="chip">License Filings</button>
+          <button class="chip">Export</button>
+        </div>
+      </div>
+
+      <!-- ====== Duel ====== -->
+      <div class="duel">
+
+        <!-- ============== ANZ (primary hub — Australia + NZ) ============== -->
+        <div class="zone zone--difc">
+          <div class="zone__hd">
+            <div class="zone__eyebrow">
+              <span class="flag" aria-hidden="true"></span>
+              <span>Sydney + Melbourne · Australia / NZ</span>
+            </div>
+            <div class="zone__name">
+              <h2>ANZ</h2>
+              <span class="code">Australia + New Zealand</span>
+            </div>
+            <div class="zone__reg">Regulators: ASIC · FMA · retail CFD leverage 30:1 · institutional leverage uncapped</div>
+          </div>
+
+          <div class="zone__stats">
+            <div class="zone__stat">
+              <div class="k">Active Competitors</div>
+              <div class="v">34</div>
+              <div class="d" style="color: var(--pos)">▲ +6 vs. Q4</div>
+            </div>
+            <div class="zone__stat">
+              <div class="k">Open Roles · 28D</div>
+              <div class="v">248</div>
+              <div class="d" style="color: var(--pos)">▲ +41% MoM</div>
+            </div>
+            <div class="zone__stat">
+              <div class="k">Focus Signal</div>
+              <div class="v" style="font-size: 13px; color: var(--amber)">Inst. Sales · DFSA</div>
+              <div class="d" style="color: var(--fg-3)">retail broker push</div>
+            </div>
+          </div>
+
+          <div class="zone__bd">
+            <div class="zone__section-title">
+              <h4>Competitor Hiring — Open Roles by Function</h4>
+              <span class="tag">public job posts · 28D</span>
+            </div>
+
+            <div class="comp-chart">
+              <!-- IG -->
+              <div class="comp">
+                <div class="comp__head">
+                  <div class="comp__logo">
+                    <div class="comp__mark">IG</div>
+                    <div class="comp__name">IG Group</div>
+                  </div>
+                  <div class="comp__meta">LON · retail CFD</div>
+                  <div class="comp__total"><b>47</b> open roles</div>
+                </div>
+                <div class="bars">
+                  <div class="bars__row is-hot" data-comp="IG" data-func="Institutional Sales" data-count="18" data-license="DFSA Category 4">
+                    <div class="bars__track"><div class="bars__fill" style="width:95%"></div>
+                      <div class="bars__label">Institutional Sales <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">18</div>
+                  </div>
+                  <div class="bars__row is-hot" data-comp="IG" data-func="DFSA Compliance" data-count="11" data-license="DFSA Category 4">
+                    <div class="bars__track"><div class="bars__fill" style="width:58%"></div>
+                      <div class="bars__label">DFSA Compliance <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">11</div>
+                  </div>
+                  <div class="bars__row" data-comp="IG" data-func="Quant / Pricing" data-count="7">
+                    <div class="bars__track"><div class="bars__fill" style="width:37%"></div>
+                      <div class="bars__label">Quant / Pricing</div>
+                    </div>
+                    <div class="bars__num">7</div>
+                  </div>
+                  <div class="bars__row" data-comp="IG" data-func="Client Onboarding" data-count="6">
+                    <div class="bars__track"><div class="bars__fill" style="width:32%"></div>
+                      <div class="bars__label">Client Onboarding</div>
+                    </div>
+                    <div class="bars__num">6</div>
+                  </div>
+                  <div class="bars__row" data-comp="IG" data-func="Marketing · Arabic" data-count="5">
+                    <div class="bars__track"><div class="bars__fill" style="width:26%"></div>
+                      <div class="bars__label">Marketing · Arabic</div>
+                    </div>
+                    <div class="bars__num">5</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Saxo -->
+              <div class="comp">
+                <div class="comp__head">
+                  <div class="comp__logo">
+                    <div class="comp__mark">SX</div>
+                    <div class="comp__name">Saxo Bank</div>
+                  </div>
+                  <div class="comp__meta">CPH · multi-asset</div>
+                  <div class="comp__total"><b>32</b> open roles</div>
+                </div>
+                <div class="bars">
+                  <div class="bars__row is-hot" data-comp="Saxo" data-func="Institutional Sales" data-count="13" data-license="DFSA Category 3A">
+                    <div class="bars__track"><div class="bars__fill" style="width:86%"></div>
+                      <div class="bars__label">Institutional Sales <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">13</div>
+                  </div>
+                  <div class="bars__row is-hot" data-comp="Saxo" data-func="DFSA Compliance" data-count="8" data-license="DFSA Category 3A">
+                    <div class="bars__track"><div class="bars__fill" style="width:53%"></div>
+                      <div class="bars__label">DFSA Compliance <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">8</div>
+                  </div>
+                  <div class="bars__row" data-comp="Saxo" data-func="Prime Brokerage" data-count="5">
+                    <div class="bars__track"><div class="bars__fill" style="width:33%"></div>
+                      <div class="bars__label">Prime Brokerage</div>
+                    </div>
+                    <div class="bars__num">5</div>
+                  </div>
+                  <div class="bars__row" data-comp="Saxo" data-func="Platform Engineering" data-count="4">
+                    <div class="bars__track"><div class="bars__fill" style="width:26%"></div>
+                      <div class="bars__label">Platform Engineering</div>
+                    </div>
+                    <div class="bars__num">4</div>
+                  </div>
+                  <div class="bars__row" data-comp="Saxo" data-func="Legal Counsel" data-count="2">
+                    <div class="bars__track"><div class="bars__fill" style="width:13%"></div>
+                      <div class="bars__label">Legal Counsel</div>
+                    </div>
+                    <div class="bars__num">2</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Eightcap -->
+              <div class="comp">
+                <div class="comp__head">
+                  <div class="comp__logo">
+                    <div class="comp__mark">E8</div>
+                    <div class="comp__name">Eightcap</div>
+                  </div>
+                  <div class="comp__meta">MEL · CFD broker</div>
+                  <div class="comp__total"><b>21</b> open roles</div>
+                </div>
+                <div class="bars">
+                  <div class="bars__row is-hot" data-comp="Eightcap" data-func="DFSA Compliance" data-count="7" data-license="DFSA Category 4 · filing">
+                    <div class="bars__track"><div class="bars__fill" style="width:78%"></div>
+                      <div class="bars__label">DFSA Compliance <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">7</div>
+                  </div>
+                  <div class="bars__row is-hot" data-comp="Eightcap" data-func="Institutional Sales" data-count="6" data-license="DFSA Category 4 · filing">
+                    <div class="bars__track"><div class="bars__fill" style="width:67%"></div>
+                      <div class="bars__label">Institutional Sales <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">6</div>
+                  </div>
+                  <div class="bars__row" data-comp="Eightcap" data-func="Regional GM" data-count="3">
+                    <div class="bars__track"><div class="bars__fill" style="width:33%"></div>
+                      <div class="bars__label">Regional GM</div>
+                    </div>
+                    <div class="bars__num">3</div>
+                  </div>
+                  <div class="bars__row" data-comp="Eightcap" data-func="Partnerships / IB" data-count="3">
+                    <div class="bars__track"><div class="bars__fill" style="width:33%"></div>
+                      <div class="bars__label">Partnerships / IB</div>
+                    </div>
+                    <div class="bars__num">3</div>
+                  </div>
+                  <div class="bars__row" data-comp="Eightcap" data-func="Support · MENA hours" data-count="2">
+                    <div class="bars__track"><div class="bars__fill" style="width:22%"></div>
+                      <div class="bars__label">Support · MENA hours</div>
+                    </div>
+                    <div class="bars__num">2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="zone__signal">
+              <span class="sig-tag">CHRO read</span>
+              The co-occurrence of <b>Institutional Sales + DFSA Compliance</b> hiring is the textbook signal that retail CFD rivals are pushing into DIFC. Three competitors are simultaneously opening <b>39 frontline sales</b> and <b>26 compliance</b> roles — implying they expect to secure DFSA Category 3A / 4 licenses by Q3 2026.
+            </div>
+          </div>
+        </div>
+
+        <!-- ============== Rest of APAC (secondary hub — Asia + ASEAN + India) ============== -->
+        <div class="zone zone--adgm">
+          <div class="zone__hd">
+            <div class="zone__eyebrow">
+              <span class="flag" aria-hidden="true"></span>
+              <span>Singapore · Hong Kong · Tokyo · ASEAN · India</span>
+            </div>
+            <div class="zone__name">
+              <h2>Rest of APAC</h2>
+              <span class="code">SG · HK · JP · TW · MY · TH · VN · PH · ID · IN</span>
+            </div>
+            <div class="zone__reg">Regulators: MAS · SFC · FSA Japan · BSP · BNM · SC · SECTH · IFSC India</div>
+          </div>
+
+          <div class="zone__stats">
+            <div class="zone__stat">
+              <div class="k">Active Competitors</div>
+              <div class="v">27</div>
+              <div class="d" style="color: var(--pos)">▲ +9 vs. Q4</div>
+            </div>
+            <div class="zone__stat">
+              <div class="k">Open Roles · 28D</div>
+              <div class="v">194</div>
+              <div class="d" style="color: var(--pos)">▲ +58% MoM</div>
+            </div>
+            <div class="zone__stat">
+              <div class="k">Focus Signal</div>
+              <div class="v" style="font-size: 13px; color: var(--cyan)">Crypto · Risk</div>
+              <div class="d" style="color: var(--fg-3)">VASP-led inflow</div>
+            </div>
+          </div>
+
+          <div class="zone__bd">
+            <div class="zone__section-title">
+              <h4>Competitor Hiring — Open Roles by Function</h4>
+              <span class="tag">public job posts · 28D</span>
+            </div>
+
+            <div class="comp-chart">
+              <!-- Binance ME -->
+              <div class="comp">
+                <div class="comp__head">
+                  <div class="comp__logo">
+                    <div class="comp__mark">BN</div>
+                    <div class="comp__name">Binance ME</div>
+                  </div>
+                  <div class="comp__meta">global · crypto exchange</div>
+                  <div class="comp__total"><b>52</b> open roles</div>
+                </div>
+                <div class="bars">
+                  <div class="bars__row is-hot" data-comp="Binance ME" data-func="Crypto / Web3 Product" data-count="19" data-license="FSRA VASP · full">
+                    <div class="bars__track"><div class="bars__fill" style="width:95%"></div>
+                      <div class="bars__label">Crypto / Web3 Product <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">19</div>
+                  </div>
+                  <div class="bars__row is-hot" data-comp="Binance ME" data-func="Risk / Surveillance" data-count="14" data-license="FSRA VASP · full">
+                    <div class="bars__track"><div class="bars__fill" style="width:70%"></div>
+                      <div class="bars__label">Risk / Surveillance <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">14</div>
+                  </div>
+                  <div class="bars__row" data-comp="Binance ME" data-func="AML / Transaction Monitoring" data-count="9">
+                    <div class="bars__track"><div class="bars__fill" style="width:45%"></div>
+                      <div class="bars__label">AML / Tx Monitoring</div>
+                    </div>
+                    <div class="bars__num">9</div>
+                  </div>
+                  <div class="bars__row" data-comp="Binance ME" data-func="Blockchain Engineering" data-count="6">
+                    <div class="bars__track"><div class="bars__fill" style="width:30%"></div>
+                      <div class="bars__label">Blockchain Engineering</div>
+                    </div>
+                    <div class="bars__num">6</div>
+                  </div>
+                  <div class="bars__row" data-comp="Binance ME" data-func="Institutional Coverage" data-count="4">
+                    <div class="bars__track"><div class="bars__fill" style="width:20%"></div>
+                      <div class="bars__label">Institutional Coverage</div>
+                    </div>
+                    <div class="bars__num">4</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hidden Road -->
+              <div class="comp">
+                <div class="comp__head">
+                  <div class="comp__logo">
+                    <div class="comp__mark">HR</div>
+                    <div class="comp__name">Hidden Road</div>
+                  </div>
+                  <div class="comp__meta">NYC · prime broker</div>
+                  <div class="comp__total"><b>29</b> open roles</div>
+                </div>
+                <div class="bars">
+                  <div class="bars__row is-hot" data-comp="Hidden Road" data-func="Risk / Surveillance" data-count="10" data-license="FSRA Cat 3A + VASP">
+                    <div class="bars__track"><div class="bars__fill" style="width:83%"></div>
+                      <div class="bars__label">Risk / Surveillance <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">10</div>
+                  </div>
+                  <div class="bars__row is-hot" data-comp="Hidden Road" data-func="Crypto / Web3 Product" data-count="8" data-license="FSRA Cat 3A + VASP">
+                    <div class="bars__track"><div class="bars__fill" style="width:67%"></div>
+                      <div class="bars__label">Crypto / Web3 Product <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">8</div>
+                  </div>
+                  <div class="bars__row" data-comp="Hidden Road" data-func="Prime Brokerage Sales" data-count="5">
+                    <div class="bars__track"><div class="bars__fill" style="width:42%"></div>
+                      <div class="bars__label">Prime Brokerage Sales</div>
+                    </div>
+                    <div class="bars__num">5</div>
+                  </div>
+                  <div class="bars__row" data-comp="Hidden Road" data-func="Credit Risk" data-count="4">
+                    <div class="bars__track"><div class="bars__fill" style="width:33%"></div>
+                      <div class="bars__label">Credit Risk</div>
+                    </div>
+                    <div class="bars__num">4</div>
+                  </div>
+                  <div class="bars__row" data-comp="Hidden Road" data-func="Operations" data-count="2">
+                    <div class="bars__track"><div class="bars__fill" style="width:17%"></div>
+                      <div class="bars__label">Operations</div>
+                    </div>
+                    <div class="bars__num">2</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- M2 -->
+              <div class="comp">
+                <div class="comp__head">
+                  <div class="comp__logo">
+                    <div class="comp__mark">M2</div>
+                    <div class="comp__name">M2</div>
+                  </div>
+                  <div class="comp__meta">AUH · crypto investment</div>
+                  <div class="comp__total"><b>23</b> open roles</div>
+                </div>
+                <div class="bars">
+                  <div class="bars__row is-hot" data-comp="M2" data-func="Crypto / Web3 Product" data-count="11" data-license="FSRA VASP · expansion">
+                    <div class="bars__track"><div class="bars__fill" style="width:92%"></div>
+                      <div class="bars__label">Crypto / Web3 Product <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">11</div>
+                  </div>
+                  <div class="bars__row is-hot" data-comp="M2" data-func="Risk / Surveillance" data-count="6" data-license="FSRA VASP · expansion">
+                    <div class="bars__track"><div class="bars__fill" style="width:50%"></div>
+                      <div class="bars__label">Risk / Surveillance <span class="chtag">Hot</span></div>
+                    </div>
+                    <div class="bars__num">6</div>
+                  </div>
+                  <div class="bars__row" data-comp="M2" data-func="Custody / Wallet Eng." data-count="4">
+                    <div class="bars__track"><div class="bars__fill" style="width:33%"></div>
+                      <div class="bars__label">Custody / Wallet Eng.</div>
+                    </div>
+                    <div class="bars__num">4</div>
+                  </div>
+                  <div class="bars__row" data-comp="M2" data-func="Treasury" data-count="2">
+                    <div class="bars__track"><div class="bars__fill" style="width:17%"></div>
+                      <div class="bars__label">Treasury</div>
+                    </div>
+                    <div class="bars__num">2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="zone__signal">
+              <span class="sig-tag">CHRO read</span>
+              The <b>Crypto Product + Risk / Surveillance</b> combination points to rapid expansion of FSRA VASP (Virtual Asset Service Provider) licensing. Three competitors posted <b>38 Product</b> + <b>30 Risk</b> roles in 28 days — effectively treating ADGM as a second headquarters alongside their APAC / US registrations.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ====== Supporting strip ====== -->
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card__hd">
+            <h3>Head-to-Head · 28-Day Velocity</h3>
+            <span class="tag">roles posted / week</span>
+          </div>
+          <div class="card__bd">
+            <div class="plot plot--sm"><div class="plot__label">[ dual line — ANZ (amber) vs Rest of APAC (cyan) ]</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__hd">
+            <h3>License Filings · Pipeline</h3>
+            <span class="tag">public register · 90D</span>
+          </div>
+          <div class="card__bd">
+            <div class="plot plot--sm"><div class="plot__label">[ stacked bars — ASIC retail CFD vs MAS RFMC / SFC Type 3 ]</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== Country breakdown ====== -->
+      <div class="card" style="margin-top:16px">
+        <div class="card__hd">
+          <h3>Country Breakdown — Live ATS Postings</h3>
+          <span class="tag" id="countryGridTag">loading…</span>
+        </div>
+        <div class="card__bd">
+          <div class="country-grid" id="countryGrid"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ---- VIEW 2: Mobility Flow — Sankey ---- -->
+    <section class="view" data-view="flow">
+      <div class="view-head">
+        <div class="view-head__left">
+          <div class="eyebrow">02 · Mobility Flow · Talent Sankey</div>
+          <h1>APAC Footprint — Source Jurisdiction → Receiving Broker</h1>
+          <div class="desc">Where APAC retail-CFD postings come from. Left nodes group brokers by their primary regulator (ASIC, FCA, Asia regulators); right nodes are the receiving firms. Link width is proportional to current open postings on the cfd-talent-intel-core ATS feed — directional, not historical. Hover any flow to isolate a source→destination pair.</div>
+        </div>
+        <div class="view-head__right">
+          <button class="chip is-on">QTD</button>
+          <button class="chip">YTD</button>
+          <button class="chip">12M</button>
+          <button class="chip">Export</button>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="lbl">Confirmed Moves · QTD</div>
+          <div class="val">127</div>
+          <div class="delta up"><span class="arr">▲</span> +34.2% YoY</div>
+        </div>
+        <div class="kpi">
+          <div class="lbl">Top Source Corridor</div>
+          <div class="val" style="font-size:18px">UK (FCA) → DXB</div>
+          <div class="delta up"><span class="arr">▲</span> 38.6% of flow</div>
+        </div>
+        <div class="kpi">
+          <div class="lbl">C-Suite / MD Bands</div>
+          <div class="val">41<span class="unit">moves</span></div>
+          <div class="delta up"><span class="arr">▲</span> +12 vs. Q4</div>
+        </div>
+        <div class="kpi">
+          <div class="lbl">Retention · 12M</div>
+          <div class="val">81.3<span class="unit">%</span></div>
+          <div class="delta down"><span class="arr">▼</span> −1.9 pp vs. 2024</div>
+        </div>
+      </div>
+
+      <!-- Sankey -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card__hd">
+          <h3>APAC Sankey — Source Regulator → Receiving Broker</h3>
+          <span class="tag">QTD · confirmed moves</span>
+        </div>
+        <div class="card__bd">
+          <div class="sankey-wrap">
+            <svg class="sankey-svg" viewBox="0 0 1000 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Talent corridor Sankey diagram">
+              <defs>
+                <linearGradient id="g-uk"   x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"  stop-color="oklch(0.78 0.14 30)" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="oklch(0.78 0.14 30)" stop-opacity="0.35"/>
+                </linearGradient>
+                <linearGradient id="g-cy"   x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"  stop-color="oklch(0.80 0.14 75)" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="oklch(0.80 0.14 75)" stop-opacity="0.35"/>
+                </linearGradient>
+                <linearGradient id="g-ap"   x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"  stop-color="oklch(0.76 0.11 210)" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="oklch(0.76 0.11 210)" stop-opacity="0.35"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Left (source) nodes — APAC: ASIC dominates, FCA second, Asia regulators third -->
+              <g class="snode" data-src="uk">
+                <rect x="60" y="40"  width="10" height="100" fill="oklch(0.78 0.14 30)"/>
+                <text class="label" x="80" y="62">Australia</text>
+                <text class="sub"   x="80" y="80">ASIC · Sydney + Melbourne</text>
+                <text class="count" x="80" y="122">120 postings · 55%</text>
+              </g>
+              <g class="snode" data-src="cy">
+                <rect x="60" y="170" width="10" height="70" fill="oklch(0.80 0.14 75)"/>
+                <text class="label" x="80" y="192">United Kingdom</text>
+                <text class="sub"   x="80" y="210">FCA · London</text>
+                <text class="count" x="80" y="232">60 postings · 27%</text>
+              </g>
+              <g class="snode" data-src="ap">
+                <rect x="60" y="270" width="10" height="55" fill="oklch(0.76 0.11 210)"/>
+                <text class="label" x="80" y="292">Asia</text>
+                <text class="sub"   x="80" y="310">SFC · MAS · JFSA · IFSC</text>
+                <text class="count" x="80" y="332">40 postings · 18%</text>
+              </g>
+
+              <!-- Right (destination) nodes — top 5 APAC brokers by job count -->
+              <g class="snode" data-dst="etoro">
+                <rect x="930" y="40"  width="10" height="78" fill="var(--fg-0)"/>
+                <text class="label" x="920" y="62"  text-anchor="end">TMGM</text>
+                <text class="sub"   x="920" y="80"  text-anchor="end">Sydney · retail CFD</text>
+                <text class="count" x="920" y="102" text-anchor="end">42 postings</text>
+              </g>
+              <g class="snode" data-dst="adss">
+                <rect x="930" y="140" width="10" height="62" fill="var(--fg-0)"/>
+                <text class="label" x="920" y="162" text-anchor="end">Axi</text>
+                <text class="sub"   x="920" y="180" text-anchor="end">Sydney · retail CFD</text>
+                <text class="count" x="920" y="202" text-anchor="end">40 postings</text>
+              </g>
+              <g class="snode" data-dst="vt">
+                <rect x="930" y="220" width="10" height="52" fill="var(--fg-0)"/>
+                <text class="label" x="920" y="242" text-anchor="end">EBC Financial</text>
+                <text class="sub"   x="920" y="260" text-anchor="end">Hong Kong · retail CFD</text>
+                <text class="count" x="920" y="282" text-anchor="end">32 postings</text>
+              </g>
+              <g class="snode" data-dst="pep">
+                <rect x="930" y="290" width="10" height="44" fill="var(--fg-0)"/>
+                <text class="label" x="920" y="312" text-anchor="end">CMC Markets</text>
+                <text class="sub"   x="920" y="330" text-anchor="end">London / Sydney · retail CFD</text>
+                <text class="count" x="920" y="352" text-anchor="end">22 postings</text>
+              </g>
+              <g class="snode" data-dst="exn">
+                <rect x="930" y="350" width="10" height="28" fill="var(--fg-0)"/>
+                <text class="label" x="920" y="372" text-anchor="end">FP Markets</text>
+                <text class="sub"   x="920" y="390" text-anchor="end">Sydney · retail CFD</text>
+                <text class="count" x="920" y="408" text-anchor="end">21 postings</text>
+              </g>
+
+              <!-- Links: path d uses cubic curve. stroke-width = flow volume -->
+              <!-- UK → eToro (22) -->
+              <path class="slink" data-src="uk" data-dst="etoro" d="M 70 70 C 500 70, 500 70, 930 70"  stroke="url(#g-uk)" stroke-width="22"/>
+              <!-- UK → ADSS (16) -->
+              <path class="slink" data-src="uk" data-dst="adss" d="M 70 88 C 500 88, 500 160, 930 160" stroke="url(#g-uk)" stroke-width="16"/>
+              <!-- UK → VT (12) -->
+              <path class="slink" data-src="uk" data-dst="vt"   d="M 70 104 C 500 104, 500 240, 930 240" stroke="url(#g-uk)" stroke-width="12"/>
+              <!-- UK → Pepperstone (8) -->
+              <path class="slink" data-src="uk" data-dst="pep"  d="M 70 118 C 500 118, 500 308, 930 308" stroke="url(#g-uk)" stroke-width="8"/>
+              <!-- UK → Exness (4) -->
+              <path class="slink" data-src="uk" data-dst="exn"  d="M 70 130 C 500 130, 500 362, 930 362" stroke="url(#g-uk)" stroke-width="4"/>
+
+              <!-- CY → eToro (14) -->
+              <path class="slink" data-src="cy" data-dst="etoro" d="M 70 184 C 500 184, 500 92,  930 92"  stroke="url(#g-cy)" stroke-width="14"/>
+              <!-- CY → ADSS (10) -->
+              <path class="slink" data-src="cy" data-dst="adss"  d="M 70 200 C 500 200, 500 176, 930 176" stroke="url(#g-cy)" stroke-width="10"/>
+              <!-- CY → VT (8) -->
+              <path class="slink" data-src="cy" data-dst="vt"    d="M 70 214 C 500 214, 500 252, 930 252" stroke="url(#g-cy)" stroke-width="8"/>
+              <!-- CY → Exness (6) -->
+              <path class="slink" data-src="cy" data-dst="exn"   d="M 70 228 C 500 228, 500 370, 930 370" stroke="url(#g-cy)" stroke-width="6"/>
+
+              <!-- AP → ADSS (5) -->
+              <path class="slink" data-src="ap" data-dst="adss"  d="M 70 282 C 500 282, 500 188, 930 188" stroke="url(#g-ap)" stroke-width="5"/>
+              <!-- AP → VT (6) -->
+              <path class="slink" data-src="ap" data-dst="vt"    d="M 70 292 C 500 292, 500 262, 930 262" stroke="url(#g-ap)" stroke-width="6"/>
+              <!-- AP → Pepperstone (10) -->
+              <path class="slink" data-src="ap" data-dst="pep"   d="M 70 304 C 500 304, 500 318, 930 318" stroke="url(#g-ap)" stroke-width="10"/>
+              <!-- AP → Exness (1) -->
+              <path class="slink" data-src="ap" data-dst="exn"   d="M 70 316 C 500 316, 500 376, 930 376" stroke="url(#g-ap)" stroke-width="1"/>
+              <!-- AP → eToro (5) -->
+              <path class="slink" data-src="ap" data-dst="etoro" d="M 70 324 C 500 324, 500 108, 930 108" stroke="url(#g-ap)" stroke-width="5"/>
+            </svg>
+
+            <div class="slegend">
+              <span><span class="swatch" style="background:oklch(0.78 0.14 30)"></span>Australia · ASIC dominance</span>
+              <span><span class="swatch" style="background:oklch(0.80 0.14 75)"></span>United Kingdom · FCA</span>
+              <span><span class="swatch" style="background:oklch(0.76 0.11 210)"></span>Asia · SFC / MAS / JFSA</span>
+              <span style="margin-left:auto">Widths from APAC live ATS postings · Hover to isolate flow</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Executive Alerts (MENA case-study narrative — hidden in APAC, no editorial yet) -->
+      <div class="card narrative-hidden">
+        <div class="card__hd">
+          <h3>Key Executive Alerts — High-Impact Departures &amp; Hires</h3>
+          <span class="tag">2 new · last 7 days</span>
+        </div>
+        <div class="card__bd" style="padding:0; overflow-x:auto">
+          <table class="alerts">
+            <thead>
+              <tr>
+                <th class="alert-sev" style="width:4px"></th>
+                <th style="width:30%">Name &amp; Title</th>
+                <th style="width:22%">Departed From</th>
+                <th style="width:4%"></th>
+                <th style="width:22%">Joined (MENA)</th>
+                <th>Strategic Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="sev-high">
+                <td class="alert-sev"></td>
+                <td>
+                  <div class="exec">
+                    <div class="exec__av">
+                      <div class="exec__photo">JH</div>
+                      <div>
+                        <div class="exec__n">James Hartley</div>
+                        <div class="exec__t">Ex · Head of Institutional Sales · EMEA</div>
+                      </div>
+                    </div>
+                    <span class="exec__tag">Priority · Sev 1</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="firm">
+                    <div class="firm__name">IG Group</div>
+                    <div class="firm__meta">London · FCA · Retail CFD</div>
+                    <div class="firm__tenure">Tenure 11y · Resigned 2026-04-09</div>
+                  </div>
+                </td>
+                <td class="arrow-col">→</td>
+                <td>
+                  <div class="firm">
+                    <div class="firm__name">eToro Dubai</div>
+                    <div class="firm__meta">DIFC · retail + social</div>
+                    <div class="firm__tenure">Title · MD, Head of Institutional · MENA</div>
+                  </div>
+                </td>
+                <td class="impact">
+                  <div class="imp-tag">CHRO Read</div>
+                  Hartley built IG's EMEA B2B liquidity franchise single-handedly and is reportedly taking <b>~6 core Institutional Sales</b> with him. At eToro Dubai he will lead the <b>institutional brokerage &amp; B2B PB line</b>, directly threatening our GCC family-office coverage in DIFC. Expect <b>10–15% dilution</b> to our UHNW pipeline by <b>Q3 2026</b>.
+                </td>
+              </tr>
+
+              <tr class="sev-elevated">
+                <td class="alert-sev"></td>
+                <td>
+                  <div class="exec">
+                    <div class="exec__av">
+                      <div class="exec__photo">MK</div>
+                      <div>
+                        <div class="exec__n">Maria Kyriakou</div>
+                        <div class="exec__t">Ex · Chief Compliance Officer</div>
+                      </div>
+                    </div>
+                    <span class="exec__tag">Elevated · Sev 2</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="firm">
+                    <div class="firm__name">Plus500CY</div>
+                    <div class="firm__meta">Limassol · CySEC · Retail CFD</div>
+                    <div class="firm__tenure">Tenure 7y · Resigned 2026-04-14</div>
+                  </div>
+                </td>
+                <td class="arrow-col">→</td>
+                <td>
+                  <div class="firm">
+                    <div class="firm__name">ADSS</div>
+                    <div class="firm__meta">ADGM · Multi-asset</div>
+                    <div class="firm__tenure">Title · Group CCO · FSRA-licensed entity</div>
+                  </div>
+                </td>
+                <td class="impact">
+                  <div class="imp-tag">CHRO Read</div>
+                  A top-tier CySEC CCO crossing into ADGM is the textbook case of the <b>CySEC → FSRA talent outflow</b>. Kyriakou brings a complete <b>EU MiFID compliance playbook</b> and <b>Tier-1 external counsel relationships</b>, accelerating ADSS's push to extend FSRA Cat 3A into MAS-equivalent status. Implication: <b>Compliance pay bands +25–30%</b> will become the new market floor.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Supporting strip -->
+      <div class="grid cols-2" style="margin-top:16px">
+        <div class="card">
+          <div class="card__hd"><h3>Weekly Inflow Volume</h3><span class="tag">placeholder</span></div>
+          <div class="card__bd"><div class="plot plot--sm"><div class="plot__label">[ area chart — weekly confirmed moves ]</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card__hd"><h3>Function Mix — Inbound</h3><span class="tag">placeholder</span></div>
+          <div class="card__bd"><div class="plot plot--sm"><div class="plot__label">[ donut — Inst Sales · Compliance · Risk · Product · Ops ]</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- VIEW 3: Salary Index ---- -->
+    <section class="view" data-view="salary">
+      <div class="view-head">
+        <div class="view-head__left">
+          <div class="eyebrow">03 · Salary Index · USD reference</div>
+          <h1>APAC Salary Premium Matrix — General vs. Qualified Roles</h1>
+          <div class="desc">APAC retail-CFD pay anchors against <b>AUD (ASIC market) and SGD / HKD (Asia financial centres)</b>, but cross-border offers settle in <b>USD-pegged base + variable</b>. The chart below shows USD-reference monthly salary P25–P75: grey bars = general-market rate, amber bars = premium for qualified profiles (ASIC RG-105 / SFC Type 3 / Mandarin or Bahasa native / institutional FX desk).</div>
+        </div>
+        <div class="view-head__right">
+          <button class="chip is-on">USD / month</button>
+          <button class="chip">USD / yr</button>
+          <button class="chip">Net · post-tax</button>
+          <button class="chip">Export</button>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="lbl">Median Premium · Qualified vs. General</div>
+          <div class="val">+108<span class="unit">%</span></div>
+          <div class="delta up"><span class="arr">▲</span> +14pp YoY</div>
+        </div>
+        <div class="kpi">
+          <div class="lbl">Highest Premium Role</div>
+          <div class="val" style="font-size:16px">Compliance · DFSA</div>
+          <div class="delta up"><span class="arr">▲</span> +116% vs. general legal</div>
+        </div>
+        <div class="kpi">
+          <div class="lbl">Arabic Language Uplift</div>
+          <div class="val">+82<span class="unit">%</span></div>
+          <div class="delta up"><span class="arr">▲</span> Account Mgmt band</div>
+        </div>
+        <div class="kpi">
+          <div class="lbl">Open Urgent Reqs · 7d</div>
+          <div class="val">37<span class="unit">roles</span></div>
+          <div class="delta up"><span class="arr">▲</span> +12 WoW</div>
+        </div>
+      </div>
+
+      <!-- Range chart -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card__hd">
+          <h3>Salary Range × Qualification Premium — AED k / month (P25–P75)</h3>
+          <span class="tag">MENA CFD · 2026 Q1 compiled</span>
+        </div>
+        <div class="card__bd" style="padding:0">
+          <div class="rchart">
+            <!-- Axis -->
+            <div class="rchart__axis">
+              <div>Role · Function</div>
+              <div class="ascale">
+                <span style="left:0%">20k</span>
+                <span style="left:25%">60k</span>
+                <span style="left:50%">100k</span>
+                <span style="left:75%">140k</span>
+                <span style="left:100%">180k</span>
+                <div class="atick">
+                  <i style="left:0%"></i><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i><i style="left:100%"></i>
+                </div>
+              </div>
+              <div style="text-align:right">Premium Gap</div>
+            </div>
+
+            <!-- Account Manager: 25-40 vs 45-75 (Arabic) -->
+            <div class="rrow">
+              <div class="rrow__role">
+                <div class="rn">Account Manager</div>
+                <div class="rm">RETAIL CFD · FRONTLINE SALES</div>
+              </div>
+              <div class="rrow__plot">
+                <!-- baseline: 25→40 ; 20k=0%, 180k=100% ; (v-20)/160 -->
+                <div class="rbar base" style="left:3.125%; width:9.375%">
+                  <span class="rbar__cap">25–40k</span>
+                </div>
+                <div class="rbar prem" style="left:15.625%; width:18.75%">
+                  <span class="rbar__cap">AR · 45–75k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+88%</div>
+                <div class="glbl">Arabic / GCC native</div>
+              </div>
+            </div>
+
+            <!-- Legal/Compliance: 40-60 vs 75-130 (DFSA) -->
+            <div class="rrow is-hero">
+              <div class="rrow__role">
+                <div class="rn">Compliance Officer</div>
+                <div class="rm">DFSA · DIFC REGULATED</div>
+              </div>
+              <div class="rrow__plot">
+                <div class="rbar base" style="left:12.5%; width:12.5%">
+                  <span class="rbar__cap">40–60k</span>
+                </div>
+                <div class="rbar prem" style="left:34.375%; width:34.375%">
+                  <span class="rbar__cap inside">75–130k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+116%</div>
+                <div class="glbl">DFSA license holder</div>
+              </div>
+            </div>
+
+            <!-- Institutional Sales: 55-85 vs 110-180 (GCC UHNW) -->
+            <div class="rrow is-hero">
+              <div class="rrow__role">
+                <div class="rn">Institutional Sales</div>
+                <div class="rm">B2B · HNW / FAMILY OFFICE</div>
+              </div>
+              <div class="rrow__plot">
+                <div class="rbar base" style="left:21.875%; width:18.75%">
+                  <span class="rbar__cap">55–85k</span>
+                </div>
+                <div class="rbar prem" style="left:56.25%; width:43.75%">
+                  <span class="rbar__cap inside">110–180k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+112%</div>
+                <div class="glbl">Portable GCC book</div>
+              </div>
+            </div>
+
+            <!-- Risk Analyst: 35-55 vs 75-120 (Crypto/Web3) -->
+            <div class="rrow">
+              <div class="rrow__role">
+                <div class="rn">Risk Analyst</div>
+                <div class="rm">MARKET · COUNTERPARTY</div>
+              </div>
+              <div class="rrow__plot">
+                <div class="rbar base" style="left:9.375%; width:12.5%">
+                  <span class="rbar__cap">35–55k</span>
+                </div>
+                <div class="rbar prem" style="left:34.375%; width:28.125%">
+                  <span class="rbar__cap inside">75–120k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+114%</div>
+                <div class="glbl">VARA / FSRA Crypto</div>
+              </div>
+            </div>
+
+            <!-- Dealer: 30-45 vs 60-95 -->
+            <div class="rrow">
+              <div class="rrow__role">
+                <div class="rn">Dealer · Trading Desk</div>
+                <div class="rm">EXECUTION · MARKET MAKING</div>
+              </div>
+              <div class="rrow__plot">
+                <div class="rbar base" style="left:6.25%; width:9.375%">
+                  <span class="rbar__cap">30–45k</span>
+                </div>
+                <div class="rbar prem" style="left:25%; width:21.875%">
+                  <span class="rbar__cap inside">60–95k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+100%</div>
+                <div class="glbl">Prop-book P&amp;L exp.</div>
+              </div>
+            </div>
+
+            <!-- Marketing: 30-50 vs 65-110 (Arabic GCC perf) -->
+            <div class="rrow">
+              <div class="rrow__role">
+                <div class="rn">Marketing Manager</div>
+                <div class="rm">PERFORMANCE · CRM</div>
+              </div>
+              <div class="rrow__plot">
+                <div class="rbar base" style="left:6.25%; width:12.5%">
+                  <span class="rbar__cap">30–50k</span>
+                </div>
+                <div class="rbar prem" style="left:28.125%; width:28.125%">
+                  <span class="rbar__cap inside">65–110k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+110%</div>
+                <div class="glbl">Arabic GCC growth lead</div>
+              </div>
+            </div>
+
+            <!-- Product: 45-65 vs 90-150 (Crypto/Web3) -->
+            <div class="rrow is-hero">
+              <div class="rrow__role">
+                <div class="rn">Product Manager</div>
+                <div class="rm">BROKERAGE PLATFORM</div>
+              </div>
+              <div class="rrow__plot">
+                <div class="rbar base" style="left:15.625%; width:12.5%">
+                  <span class="rbar__cap">45–65k</span>
+                </div>
+                <div class="rbar prem" style="left:43.75%; width:37.5%">
+                  <span class="rbar__cap inside">90–150k</span>
+                </div>
+              </div>
+              <div class="rrow__gap">
+                <div class="gpct">+121%</div>
+                <div class="glbl">Web3 / tokenised CFD</div>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="rlegend">
+              <span><span class="rsw base"></span>General role · market P25–P75</span>
+              <span><span class="rsw prem"></span>Qualified / specialized · premium P25–P75</span>
+              <span style="margin-left:auto">Source · aggregated from LinkedIn MENA, GulfTalent, Hays Dubai · n=412 postings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kanban: Urgent Reqs (MENA narrative — hidden in APAC) -->
+      <div class="card narrative-hidden">
+        <div class="card__hd">
+          <h3>Competitor Urgent Reqs — This Week</h3>
+          <span class="tag">LIVE · LinkedIn MENA &amp; GulfTalent crawl</span>
+        </div>
+        <div class="card__bd" style="padding:0">
+          <div class="kanban">
+            <!-- Column 1: Sales / BD -->
+            <div class="kcol">
+              <div class="kcol__hd">
+                <div>
+                  <div class="kt">Sales / BD</div>
+                  <div class="ksub">B2B · Family Office · UHNW</div>
+                </div>
+                <div class="kcount">12 open</div>
+              </div>
+              <div class="kcol__bd">
+
+                <div class="kjob is-hot">
+                  <div class="kjob__row">
+                    <div class="kjob__co">eToro Dubai</div>
+                    <div class="kjob__age new">2d new</div>
+                  </div>
+                  <div class="kjob__title">MD, Head of Institutional Sales — MENA</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>Reports to Group CRO</span><span class="dot"></span>
+                    <span>Backfill · J. Hartley hire</span>
+                  </div>
+                  <div class="kjob__pay">AED 140–180k<span class="pu">/ month + 2.5× bonus</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">GCC UHNW</span>
+                    <span class="kjob__tag">Arabic +</span>
+                    <span class="kjob__tag">DFSA CF-30</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-19</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">ADSS</div>
+                    <div class="kjob__age new">4d new</div>
+                  </div>
+                  <div class="kjob__title">Director, Institutional Coverage — GCC Family Offices</div>
+                  <div class="kjob__meta">
+                    <span>ADGM</span><span class="dot"></span>
+                    <span>Book required</span>
+                  </div>
+                  <div class="kjob__pay">AED 95–130k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">Arabic</span>
+                    <span class="kjob__tag">FSRA</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>GulfTalent</b></span>
+                    <span>Posted 2026-04-17</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">VT Markets</div>
+                    <div class="kjob__age">6d</div>
+                  </div>
+                  <div class="kjob__title">Senior B2B Sales — Liquidity &amp; PB</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>Non-EU / APAC pref.</span>
+                  </div>
+                  <div class="kjob__pay">AED 75–110k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag">CFD Liquidity</span>
+                    <span class="kjob__tag">EN</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-15</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">Pepperstone ME</div>
+                    <div class="kjob__age">7d</div>
+                  </div>
+                  <div class="kjob__title">Institutional Sales Manager — Riyadh desk</div>
+                  <div class="kjob__meta">
+                    <span>KFH · Riyadh</span><span class="dot"></span>
+                    <span>Relocation +</span>
+                  </div>
+                  <div class="kjob__pay">AED 70–95k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">Arabic</span>
+                    <span class="kjob__tag">CMA</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>GulfTalent</b></span>
+                    <span>Posted 2026-04-14</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Column 2: Compliance / Risk -->
+            <div class="kcol">
+              <div class="kcol__hd">
+                <div>
+                  <div class="kt">Compliance / Risk</div>
+                  <div class="ksub">DFSA · FSRA · VARA license bench</div>
+                </div>
+                <div class="kcount">14 open</div>
+              </div>
+              <div class="kcol__bd">
+
+                <div class="kjob is-hot">
+                  <div class="kjob__row">
+                    <div class="kjob__co">ADSS</div>
+                    <div class="kjob__age new">1d new</div>
+                  </div>
+                  <div class="kjob__title">Deputy CCO — FSRA Cat 3A entity</div>
+                  <div class="kjob__meta">
+                    <span>ADGM</span><span class="dot"></span>
+                    <span>Under M. Kyriakou</span>
+                  </div>
+                  <div class="kjob__pay">AED 110–150k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">FSRA SEO</span>
+                    <span class="kjob__tag">ICA / CAMS</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-20</span>
+                  </div>
+                </div>
+
+                <div class="kjob is-hot">
+                  <div class="kjob__row">
+                    <div class="kjob__co">eToro Dubai</div>
+                    <div class="kjob__age new">3d new</div>
+                  </div>
+                  <div class="kjob__title">Head of Risk — Market &amp; Crypto</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>VARA pathway</span>
+                  </div>
+                  <div class="kjob__pay">AED 90–135k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag cyan">Crypto</span>
+                    <span class="kjob__tag amber">DFSA CF-11</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-18</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">Exness MENA</div>
+                    <div class="kjob__age">5d</div>
+                  </div>
+                  <div class="kjob__title">DFSA-licensed Compliance Officer</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>CF-10 / CF-11</span>
+                  </div>
+                  <div class="kjob__pay">AED 75–110k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">DFSA</span>
+                    <span class="kjob__tag">AML</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>GulfTalent</b></span>
+                    <span>Posted 2026-04-16</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">Plus500 ME</div>
+                    <div class="kjob__age">6d</div>
+                  </div>
+                  <div class="kjob__title">Counterparty Risk Manager — CFD Book</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>FRM / CFA pref.</span>
+                  </div>
+                  <div class="kjob__pay">AED 65–90k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag">Risk</span>
+                    <span class="kjob__tag">CFD</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-15</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Column 3: Marketing -->
+            <div class="kcol">
+              <div class="kcol__hd">
+                <div>
+                  <div class="kt">Marketing</div>
+                  <div class="ksub">Arabic · GCC growth · Brand</div>
+                </div>
+                <div class="kcount">9 open</div>
+              </div>
+              <div class="kcol__bd">
+
+                <div class="kjob is-hot">
+                  <div class="kjob__row">
+                    <div class="kjob__co">eToro Dubai</div>
+                    <div class="kjob__age new">2d new</div>
+                  </div>
+                  <div class="kjob__title">Head of Brand — MENA</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>Reports to Group CMO</span>
+                  </div>
+                  <div class="kjob__pay">AED 110–150k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">Arabic +</span>
+                    <span class="kjob__tag">Brand</span>
+                    <span class="kjob__tag">GCC</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-19</span>
+                  </div>
+                </div>
+
+                <div class="kjob is-hot">
+                  <div class="kjob__row">
+                    <div class="kjob__co">ADSS</div>
+                    <div class="kjob__age new">4d new</div>
+                  </div>
+                  <div class="kjob__title">Arabic Content Lead — MENA</div>
+                  <div class="kjob__meta">
+                    <span>ADGM</span><span class="dot"></span>
+                    <span>FSRA-approved collateral</span>
+                  </div>
+                  <div class="kjob__pay">AED 80–110k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">Arabic</span>
+                    <span class="kjob__tag">Content</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-17</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">IG</div>
+                    <div class="kjob__age">5d</div>
+                  </div>
+                  <div class="kjob__title">Performance Marketing Manager — GCC</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>Paid search · social</span>
+                  </div>
+                  <div class="kjob__pay">AED 70–95k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag">Growth</span>
+                    <span class="kjob__tag">Paid</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>GulfTalent</b></span>
+                    <span>Posted 2026-04-16</span>
+                  </div>
+                </div>
+
+                <div class="kjob">
+                  <div class="kjob__row">
+                    <div class="kjob__co">Pepperstone ME</div>
+                    <div class="kjob__age">7d</div>
+                  </div>
+                  <div class="kjob__title">Arabic Performance Marketing Lead</div>
+                  <div class="kjob__meta">
+                    <span>DIFC</span><span class="dot"></span>
+                    <span>GCC paid growth</span>
+                  </div>
+                  <div class="kjob__pay">AED 65–95k<span class="pu">/ month</span></div>
+                  <div class="kjob__tags">
+                    <span class="kjob__tag amber">Arabic</span>
+                    <span class="kjob__tag">Growth</span>
+                  </div>
+                  <div class="kjob__src">
+                    <span>Source · <b>LinkedIn MENA</b></span>
+                    <span>Posted 2026-04-14</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Tooltip (portal) -->
+<div class="tt" id="tooltip" role="tooltip" aria-hidden="true">
+  <div class="tt__tag" id="tt-tag">Strategic Read</div>
+  <div class="tt__title" id="tt-title">—</div>
+  <div class="tt__body" id="tt-body">—</div>
+  <div class="tt__foot">
+    <span>License signal · <b id="tt-license">—</b></span>
+    <span>Open roles · <b id="tt-count">—</b></span>
   </div>
-  <div class="hd__spacer"></div>
-  <div class="hd__meta">
-    <span>Region · <b>Asia-Pacific</b></span>
-    <span>Source · <b>cfd-talent-intel-core</b></span>
-    <span class="hd__pill" id="hdGenerated">loading…</span>
-  </div>
-</header>
-
-<main class="main">
-
-  <section class="section">
-    <div class="section__title">
-      <h2>Snapshot</h2>
-      <small>this week</small>
-    </div>
-    <div class="kpis">
-      <div class="kpi">
-        <div class="kpi__label">Open positions</div>
-        <div class="kpi__value" id="kpiTotal">—</div>
-        <div class="kpi__sub" id="kpiTotalSub"></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">Hot companies</div>
-        <div class="kpi__value" id="kpiHot">—</div>
-        <div class="kpi__sub">≥ 5 postings</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">Companies tracked</div>
-        <div class="kpi__value" id="kpiCompanies">—</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">Markets covered</div>
-        <div class="kpi__value" id="kpiZones">—</div>
-        <div class="kpi__sub">countries / zones</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section__title">
-      <h2>Function distribution</h2>
-      <small>postings by HR function</small>
-    </div>
-    <div id="fnList" class="empty">loading…</div>
-  </section>
-
-  <section class="section">
-    <div class="section__title">
-      <h2>Companies</h2>
-      <small>sorted by total postings · gold border = hot (≥ 5)</small>
-    </div>
-    <div id="coGrid" class="empty">loading…</div>
-  </section>
-
-  <section class="section">
-    <div class="section__title">
-      <h2>Geography</h2>
-      <small>postings by country / zone</small>
-    </div>
-    <div id="countryGrid" class="empty">loading…</div>
-  </section>
-
-  <footer class="ft">
-    <div>Data · cfd-talent-intel-core (Workable + Greenhouse + Workday + Lever + Ashby + SmartRecruiters)</div>
-    <div>Refreshes Mondays 08:30 SGT</div>
-  </footer>
-
-</main>
+</div>
 
 <script>
-  const FEED_URL = 'https://cfd-talent-intel-core.rob77928.workers.dev/data/apac.json';
+  /* ===== Data pipeline: fetch ./data/mena_data.json and hydrate the bars ===== */
+  /* If the fetch fails (file missing, opened via file:// in a browser that blocks
+     local XHR, etc.) the page silently keeps whatever static values the HTML was
+     authored with, so the dashboard always has something to show. */
+  (function hydrateFromJson() {
+    // Metadata for the company logo box and subtitle. When the JSON returns a
+    // company not listed here, we fall back to a 2-letter initial and em-dash.
+    var COMPANY_META = {
+      /* ANZ-anchored retail CFDs */
+      "TMGM":              { logo: "TM", meta: "Sydney · retail CFD" },
+      "Axi":               { logo: "AX", meta: "Sydney · retail CFD" },
+      "FP Markets":        { logo: "FP", meta: "Sydney · retail CFD" },
+      "Pepperstone":       { logo: "PP", meta: "Melbourne · retail CFD" },
+      "Eightcap":          { logo: "EC", meta: "Melbourne · retail CFD" },
+      "Trade Nation":      { logo: "TN", meta: "London / Sydney · retail CFD" },
+      "ThinkMarkets":      { logo: "TK", meta: "Melbourne · retail CFD" },
+      /* Tier 1 globals with APAC presence */
+      "IG Group":          { logo: "IG", meta: "London · retail CFD · APAC desk" },
+      "CMC Markets":       { logo: "CM", meta: "London / Sydney · retail CFD" },
+      "Saxo Bank":         { logo: "SX", meta: "Copenhagen · multi-asset bank" },
+      "Swissquote":        { logo: "SQ", meta: "Gland · multi-asset bank" },
+      /* Asia-anchored retail CFDs */
+      "EBC Financial Group": { logo: "EB", meta: "Hong Kong · retail CFD" },
+      "FXTM":              { logo: "FX", meta: "Limassol · retail CFD" },
+      /* Multi-asset / Cyprus brokers active in APAC */
+      "Capital.com":       { logo: "CP", meta: "Limassol · multi-asset" },
+      "XM":                { logo: "XM", meta: "Limassol · retail CFD" },
+      "Libertex":          { logo: "LX", meta: "Limassol · retail CFD" },
+      "CXM Direct":        { logo: "CX", meta: "FCA / CySEC · retail CFD" },
+    };
 
-  function abbrev(name) {
-    const parts = name.replace(/[.()]/g, '').split(/\s+/).filter(Boolean);
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return parts.slice(0, 3).map(p => p[0]).join('').toUpperCase();
-  }
+    fetch('https://cfd-talent-intel-core.rob77928.workers.dev/data/apac.json', { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) { applyData(data); applyCountryGrid(data); })
+      .catch(function (err) {
+        console.warn('[APAC] cfd-talent-intel-core apac.json not loaded — using static values:', err.message);
+      });
 
-  function fmtDate(iso) {
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return '';
-    return d.toISOString().slice(0, 10);
-  }
+    var COUNTRY_NAMES = {
+      AU: 'Australia', NZ: 'New Zealand', SG: 'Singapore', HK: 'Hong Kong',
+      JP: 'Japan', TW: 'Taiwan', KR: 'South Korea', CN: 'China', MO: 'Macau',
+      MY: 'Malaysia', TH: 'Thailand', VN: 'Vietnam', PH: 'Philippines',
+      ID: 'Indonesia', IN: 'India', BD: 'Bangladesh', PK: 'Pakistan', LK: 'Sri Lanka',
+    };
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-  }
+    function applyCountryGrid(data) {
+      var grid = document.getElementById('countryGrid');
+      if (!grid || !data || !Array.isArray(data.records)) return;
 
-  fetch(FEED_URL, { cache: 'no-store' })
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(applyData)
-    .catch(err => {
-      console.warn('[apac] feed not loaded:', err.message);
-      document.getElementById('hdGenerated').textContent = 'feed offline';
+      var byCountry = {};
+      data.records.forEach(function (rec) {
+        if (!rec.zone) return;
+        if (!byCountry[rec.zone]) byCountry[rec.zone] = { jobs: 0, companies: {} };
+        byCountry[rec.zone].jobs += rec.count;
+        byCountry[rec.zone].companies[rec.company] = true;
+      });
+      var entries = Object.keys(byCountry).map(function (z) {
+        return { code: z, jobs: byCountry[z].jobs, companies: Object.keys(byCountry[z].companies).length };
+      }).sort(function (a, b) { return b.jobs - a.jobs; });
+
+      var totalJobs = entries.reduce(function (s, e) { return s + e.jobs; }, 0);
+
+      grid.innerHTML = entries.map(function (e) {
+        var name = COUNTRY_NAMES[e.code] || e.code;
+        var hot = e.jobs >= 30;
+        return ''
+          + '<div class="country-card' + (hot ? ' is-hot' : '') + '">'
+          +   '<div class="country-card__hd">'
+          +     '<span class="country-card__code">' + e.code + '</span>'
+          +     '<span class="country-card__name">' + name + '</span>'
+          +   '</div>'
+          +   '<div class="country-card__total">' + e.jobs + '</div>'
+          +   '<div class="country-card__sub">' + e.companies + ' broker' + (e.companies > 1 ? 's' : '') + '</div>'
+          + '</div>';
+      }).join('');
+
+      var tag = document.getElementById('countryGridTag');
+      if (tag) tag.textContent = entries.length + ' markets · ' + totalJobs + ' postings · gold = hot (≥30)';
+    }
+
+    function applyData(data) {
+      if (!data || !Array.isArray(data.records) || data.records.length === 0) return;
+
+      // Group records by zone -> company -> [records].
+      // APAC: data zones are ISO country codes (AU / NZ / SG / HK / JP / TW / CN /
+      // MY / TH / VN / PH / ID / IN). We split into ANZ (Australia + NZ) as the
+      // primary hub vs Rest of APAC (Asia + ASEAN + India) as the secondary,
+      // since Australia alone carries ~33% of APAC retail CFD hiring.
+      var grouped = { DIFC: {}, ADGM: {} };
+      data.records.forEach(function (rec) {
+        var anz = ['AU', 'NZ'];
+        var zone = anz.indexOf(rec.zone) >= 0 ? 'DIFC' : 'ADGM';
+        if (!grouped[zone][rec.company]) grouped[zone][rec.company] = [];
+        grouped[zone][rec.company].push(rec);
+      });
+
+      // For each zone, replace .comp-chart contents entirely with generated cards.
+      ['DIFC', 'ADGM'].forEach(function (zone) {
+        var zoneEl = document.querySelector('.zone--' + zone.toLowerCase());
+        if (!zoneEl) return;
+        var chart = zoneEl.querySelector('.comp-chart');
+        if (!chart) return;
+
+        var companies = Object.keys(grouped[zone]).map(function (name) {
+          var records = grouped[zone][name];
+          var total = records.reduce(function (a, r) { return a + (r.count || 0); }, 0);
+          return { name: name, records: records, total: total };
+        });
+        if (companies.length === 0) return; // keep static cards if this zone has no JSON data
+        companies.sort(function (a, b) { return b.total - a.total; });
+
+        chart.innerHTML = '';
+        companies.forEach(function (c) {
+          chart.appendChild(buildCompanyCard(c.name, c.records, c.total));
+        });
+      });
+
+      if (data.generated_at) {
+        var sync = document.getElementById('lastSync');
+        if (sync) {
+          sync.textContent = data.generated_at.replace('T', ' ').slice(0, 16) + ' GST';
+          sync.dataset.hydrated = '1'; // stop tick() from overwriting us
+        }
+      }
+    }
+
+    function buildCompanyCard(name, records, total) {
+      var meta = COMPANY_META[name] || { logo: name.substring(0, 2).toUpperCase(), meta: '—' };
+      var maxCount = records.reduce(function (m, r) { return Math.max(m, r.count || 0); }, 0);
+      if (maxCount <= 0) maxCount = 1;
+      var sorted = records.slice().sort(function (a, b) { return (b.count || 0) - (a.count || 0); });
+
+      var comp = document.createElement('div');
+      comp.className = 'comp';
+
+      var head = document.createElement('div');
+      head.className = 'comp__head';
+      var logo = document.createElement('div');
+      logo.className = 'comp__logo';
+      var mark = document.createElement('div');
+      mark.className = 'comp__mark';
+      mark.textContent = meta.logo;
+      var nm = document.createElement('div');
+      nm.className = 'comp__name';
+      nm.textContent = name;
+      logo.appendChild(mark); logo.appendChild(nm);
+      var metaEl = document.createElement('div');
+      metaEl.className = 'comp__meta';
+      metaEl.textContent = meta.meta;
+      var totEl = document.createElement('div');
+      totEl.className = 'comp__total';
+      var b = document.createElement('b'); b.textContent = String(total);
+      totEl.appendChild(b);
+      totEl.appendChild(document.createTextNode(' open roles'));
+      head.appendChild(logo); head.appendChild(metaEl); head.appendChild(totEl);
+      comp.appendChild(head);
+
+      var bars = document.createElement('div');
+      bars.className = 'bars';
+      sorted.forEach(function (rec) {
+        bars.appendChild(buildBarRow(name, rec, maxCount));
+      });
+      comp.appendChild(bars);
+
+      return comp;
+    }
+
+    function buildBarRow(company, rec, maxCount) {
+      var row = document.createElement('div');
+      row.className = 'bars__row' + (rec.hot ? ' is-hot' : '');
+      row.dataset.comp = company;
+      row.dataset.func = rec.function;
+      row.dataset.count = String(rec.count || 0);
+      if (rec.license_stage) row.dataset.license = rec.license_stage;
+
+      var track = document.createElement('div');
+      track.className = 'bars__track';
+      var fill = document.createElement('div');
+      fill.className = 'bars__fill';
+      fill.style.width = Math.round(((rec.count || 0) / maxCount) * 100) + '%';
+      var label = document.createElement('div');
+      label.className = 'bars__label';
+      label.appendChild(document.createTextNode(rec.function));
+      if (rec.hot) {
+        label.appendChild(document.createTextNode(' '));
+        var chip = document.createElement('span');
+        chip.className = 'chtag'; chip.textContent = 'Hot';
+        label.appendChild(chip);
+      }
+      track.appendChild(fill); track.appendChild(label);
+
+      var num = document.createElement('div');
+      num.className = 'bars__num';
+      num.textContent = String(rec.count || 0);
+
+      row.appendChild(track); row.appendChild(num);
+      return row;
+    }
+  })();
+
+  // Sidebar nav switching
+  const buttons = document.querySelectorAll('.navbtn[data-view]');
+  const views   = document.querySelectorAll('.view[data-view]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.view;
+      buttons.forEach(b => b.classList.toggle('is-active', b === btn));
+      views.forEach(view => view.classList.toggle('is-on', view.dataset.view === v));
+      document.querySelector('.main').scrollTop = 0;
     });
+  });
 
-  function applyData(data) {
-    if (!data || !Array.isArray(data.records)) return;
-
-    const totalJobs = data.records.reduce((s, r) => s + r.count, 0);
-    const companies = {};
-    const fnTotals = {};
-    const zoneTotals = {};
-    data.records.forEach(r => {
-      if (!companies[r.company]) companies[r.company] = { name: r.company, total: 0, hot: false, byFn: {}, zones: new Set() };
-      const c = companies[r.company];
-      c.total += r.count;
-      if (r.hot) c.hot = true;
-      c.byFn[r.function] = (c.byFn[r.function] || 0) + r.count;
-      if (r.zone) c.zones.add(r.zone);
-      fnTotals[r.function] = (fnTotals[r.function] || 0) + r.count;
-      zoneTotals[r.zone] = (zoneTotals[r.zone] || 0) + r.count;
-    });
-    const companyList = Object.values(companies).sort((a, b) => b.total - a.total);
-    companyList.forEach(c => { if (c.total >= 5) c.hot = true; });
-    const hotCount = companyList.filter(c => c.hot).length;
-
-    document.getElementById('hdGenerated').textContent = 'updated ' + (fmtDate(data.generated_at) || '—');
-
-    document.getElementById('kpiTotal').textContent = totalJobs;
-    document.getElementById('kpiTotalSub').textContent = data.record_count + ' records';
-    document.getElementById('kpiHot').textContent = hotCount;
-    document.getElementById('kpiCompanies').textContent = companyList.length;
-    document.getElementById('kpiZones').textContent = Object.keys(zoneTotals).length;
-
-    const fnEntries = Object.entries(fnTotals).sort((a, b) => b[1] - a[1]);
-    const fnMax = fnEntries[0]?.[1] || 1;
-    const fnHtml = fnEntries.map(([fn, count]) => {
-      const pct = (count / fnMax * 100).toFixed(1);
-      const isHot = count >= fnMax * 0.5;
-      return `
-        <div class="fn-row">
-          <div class="fn-row__label">${escapeHtml(fn)}</div>
-          <div class="fn-row__bar">
-            <div class="fn-row__fill ${isHot ? 'fn-row__fill--hot' : ''}" style="width:${pct}%"></div>
-          </div>
-          <div class="fn-row__count">${count}</div>
-        </div>`;
-    }).join('');
-    const fnEl = document.getElementById('fnList');
-    fnEl.className = '';
-    fnEl.innerHTML = fnHtml || '<div class="empty">no data</div>';
-
-    const coHtml = companyList.map(c => {
-      const fnRows = Object.entries(c.byFn)
-        .sort((a, b) => b[1] - a[1])
-        .map(([fn, n]) => `<div class="co__row"><span>${escapeHtml(fn)}</span><span>${n}</span></div>`)
-        .join('');
-      const zones = [...c.zones].sort().join(' · ');
-      return `
-        <div class="co ${c.hot ? 'co--hot' : ''}">
-          <div class="co__hd">
-            <div class="co__logo">${escapeHtml(abbrev(c.name))}</div>
-            <div>
-              <div class="co__name">${escapeHtml(c.name)}</div>
-              <div class="co__zone">${escapeHtml(zones)}</div>
-            </div>
-            <div class="co__total">${c.total}</div>
-          </div>
-          ${fnRows}
-        </div>`;
-    }).join('');
-    const coEl = document.getElementById('coGrid');
-    coEl.className = 'co-grid';
-    coEl.innerHTML = coHtml || '<div class="empty">no companies</div>';
-
-    const zoneEntries = Object.entries(zoneTotals).sort((a, b) => b[1] - a[1]);
-    const zoneHtml = zoneEntries.map(([z, n]) => `
-      <div class="country">
-        <span class="country__code">${escapeHtml(z)}</span>
-        <span class="country__count">${n}</span>
-      </div>`).join('');
-    const czEl = document.getElementById('countryGrid');
-    czEl.className = 'country-grid';
-    czEl.innerHTML = zoneHtml || '<div class="empty">no zones</div>';
+  // Ticking "last sync"
+  function fmt(n){ return String(n).padStart(2,'0'); }
+  function tick() {
+    const el = document.getElementById('lastSync');
+    if (!el || el.dataset.hydrated === '1') return; // JSON owns the timestamp
+    const d = new Date();
+    const s = `${d.getFullYear()}-${fmt(d.getMonth()+1)}-${fmt(d.getDate())} ${fmt(d.getHours())}:${fmt(d.getMinutes())} GST`;
+    el.textContent = s;
   }
+  tick();
+  setInterval(tick, 30000);
+
+  /* ===== Bar-row tooltip for Hub Heatmap ===== */
+  const tt       = document.getElementById('tooltip');
+  const ttTag    = document.getElementById('tt-tag');
+  const ttTitle  = document.getElementById('tt-title');
+  const ttBody   = document.getElementById('tt-body');
+  const ttLic    = document.getElementById('tt-license');
+  const ttCnt    = document.getElementById('tt-count');
+
+  // Strategic-read copy per (zone, function). Keyed by function label.
+  const STRAT = {
+    'Institutional Sales': {
+      title: 'Retail CFD rivals pivoting to institutional',
+      body: '<b>{comp}</b> has opened <b>{count}</b> Institutional Sales roles in one wave — far beyond BAU replacement. This implies the firm is <b>applying for DFSA institutional-client coverage beyond its retail license</b>, extending MENA from retail into B2B liquidity distribution. Typically precedes go-live by 12–18 weeks.'
+    },
+    'DFSA Compliance': {
+      title: 'Compliance surge — live DFSA license filing',
+      body: 'Opening <b>{count}</b> DFSA Compliance roles at once almost exclusively happens at firms <b>actively filing for Category 3A / 4 licenses</b>. DFSA review requires the Compliance HOF to be DIFC-resident, making this a leading indicator of license progress.'
+    },
+    'Crypto / Web3 Product': {
+      title: 'VASP expansion — product line relocating to ADGM',
+      body: '<b>{comp}</b> has opened <b>{count}</b> Crypto Product roles. FSRA VASP full license requires regional product ownership — meaning the firm is moving core product lines and token-listing decision rights into ADGM, effectively setting up a second HQ.'
+    },
+    'Risk / Surveillance': {
+      title: 'Market Surveillance build-out — FSRA pre-license',
+      body: 'FSRA requires VASPs to maintain <b>localized market-surveillance and risk teams</b>. <b>{comp}</b> has posted <b>{count}</b> Risk roles — typically initiated <b>6 months before license grant</b>. A strong signal that license issuance is imminent.'
+    },
+    'AML / Transaction Monitoring': {
+      title: 'AML roles — a VASP filing prerequisite',
+      body: 'FSRA mandates that VASPs hire a local AML / Tx-Monitoring Officer. The appearance of this role means <b>{comp}</b> has already submitted a VASP application to FSRA and is in the supplementary-documentation stage.'
+    },
+    'Blockchain Engineering': {
+      title: 'Core engineering shifting from HQ to ADGM',
+      body: 'Relocating on-chain / smart-contract engineering to ADGM is how firms satisfy FSRA <b>Substance rules</b> — core technical IP must operate inside the zone to sustain a VASP license.'
+    },
+    'Custody / Wallet Eng.': {
+      title: 'In-house custody — FSRA Providing-Custody track',
+      body: 'Custody engineering roles indicate a firm is applying for <b>FSRA Providing Custody license category</b> and moving off third-party custodians. This will compress our current custody revenue directly.'
+    },
+    'Prime Brokerage': {
+      title: 'Prime Brokerage establishing in DIFC',
+      body: 'Prime Brokerage headcount is typically hired only after <b>DFSA Category 3A</b> has been granted. The signal implies the firm PB business line has received in-principle approval.'
+    },
+    'Prime Brokerage Sales': {
+      title: 'PB desk scaling up in ADGM — go-live countdown',
+      body: '<b>{comp}</b> hiring PB salespeople in ADGM means its <b>FSRA Cat 3A + VASP dual license</b> has entered the final approval stage.'
+    },
+    'Quant / Pricing': {
+      title: 'Local pricing authority — booking hub to execution hub',
+      body: 'Moving Quant / Pricing into DIFC is how firms relocate <b>trade booking</b> and <b>risk bookkeeping</b> to the region. A clear signal of MENA being upgraded from a sales office to a full execution hub.'
+    },
+    'Client Onboarding': {
+      title: 'Onboarding localisation',
+      body: 'An expanding onboarding team means <b>{comp}</b> expects MENA client volume to grow 5-10x. Typically corresponds to the 2 quarters leading up to license go-live.'
+    },
+    'Marketing · Arabic': {
+      title: 'Arabic localisation — consumer go-live prep',
+      body: 'Arabic-first marketing hires indicate the firm is preparing to launch brand and customer-acquisition campaigns within <b>3-6 months</b>.'
+    },
+    'Platform Engineering': {
+      title: 'Platform localisation — regional data residency',
+      body: 'DFSA requires certain data categories to be processed locally. Basing platform engineering in DIFC is <b>one of the license-review requirements</b>.'
+    },
+    'Legal Counsel': {
+      title: 'Regional legal build-out — key license-application role',
+      body: 'On top of SEO / FO / CO, DFSA requires a locally-resident legal lead. Posting this role means <b>{comp}</b> is finalising its SMF roster.'
+    },
+    'Institutional Coverage': {
+      title: 'Institutional coverage expansion',
+      body: '<b>{comp}</b> is scaling its institutional coverage desk, targeting MENA sovereign funds and family offices. Combined with adjacent postings, this is a <b>direct poaching risk against our DIFC client base</b>.'
+    },
+    'Regional GM': {
+      title: 'MENA Regional GM — competitor promoting MENA to a standalone P&L',
+      body: 'Appointing a Regional GM means the firm no longer treats MENA as a branch office but as a standalone P&L. Budget, hiring, and pricing authority are being fully localised.'
+    },
+    'Partnerships / IB': {
+      title: 'IB / white-label channel expansion — post-DFSA acceleration',
+      body: 'Partnerships roles typically surface in the first 1-2 quarters after license grant. The firm is replicating its white-label and IB network into DIFC.'
+    },
+    'Support · MENA hours': {
+      title: 'GST-hours client servicing — preparing for local customers',
+      body: 'MENA-hours client-servicing roles are one of <b>DFSA consumer-protection requirements</b>. Their appearance signals an imminent go-live.'
+    },
+    'Credit Risk': {
+      title: 'Credit Risk localisation — devolving PB credit-limit authority',
+      body: 'Credit Risk hires mean the firm is devolving credit review / PB limit authority from HQ to ADGM to satisfy FSRA local Capital Adequacy rules.'
+    },
+    'Operations': {
+      title: 'Middle-office localisation — FSRA Substance compliance',
+      body: 'Seating Ops in ADGM is the substantive-economic-activity proof required to sustain a VASP license.'
+    },
+    'Treasury': {
+      title: 'Treasury localisation',
+      body: 'Basing treasury in ADGM allows the firm to use local banking rails for client AED clearing and stablecoin reserve management.'
+    }
+  };
+
+  function showTip(row, evt) {
+    const func    = row.dataset.func;
+    const comp    = row.dataset.comp;
+    const count   = row.dataset.count || '—';
+    const license = row.dataset.license || '—';
+    const zoneEl  = row.closest('.zone');
+    const isAdgm  = zoneEl && zoneEl.classList.contains('zone--adgm');
+    const zoneName = isAdgm ? 'ADGM · Strategic Read' : 'DIFC · Strategic Read';
+
+    const strat = STRAT[func] || {
+      title: func,
+      body: '<b>' + comp + '</b> currently has <b>' + count + '</b> open roles in this function.'
+    };
+
+    tt.classList.toggle('zone-adgm', !!isAdgm);
+    ttTag.textContent = zoneName;
+    ttTitle.textContent = strat.title;
+    ttBody.innerHTML = strat.body.replace(/\{comp\}/g, comp).replace(/\{count\}/g, count);
+    ttLic.textContent = license;
+    ttCnt.textContent = count;
+
+    positionTip(evt);
+    tt.classList.add('is-on');
+    tt.setAttribute('aria-hidden', 'false');
+  }
+  function hideTip() {
+    tt.classList.remove('is-on');
+    tt.setAttribute('aria-hidden', 'true');
+  }
+  function positionTip(evt) {
+    const pad = 14;
+    const rect = tt.getBoundingClientRect();
+    const w = rect.width || 300;
+    const h = rect.height || 160;
+    let x = evt.clientX + pad;
+    let y = evt.clientY + pad;
+    if (x + w + pad > window.innerWidth)  x = evt.clientX - w - pad;
+    if (y + h + pad > window.innerHeight) y = evt.clientY - h - pad;
+    tt.style.left = Math.max(8, x) + 'px';
+    tt.style.top  = Math.max(8, y) + 'px';
+  }
+  document.querySelectorAll('.bars__row').forEach(row => {
+    row.addEventListener('mouseenter', e => showTip(row, e));
+    row.addEventListener('mousemove',  e => positionTip(e));
+    row.addEventListener('mouseleave', hideTip);
+    row.addEventListener('focus',      e => showTip(row, { clientX: row.getBoundingClientRect().right, clientY: row.getBoundingClientRect().top }));
+    row.addEventListener('blur',       hideTip);
+    row.tabIndex = 0;
+  });
+
+  /* ===== Sankey link hover highlighting ===== */
+  const links = document.querySelectorAll('.slink');
+  links.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      links.forEach(l => { if (l !== link) l.classList.add('dim'); });
+    });
+    link.addEventListener('mouseleave', () => {
+      links.forEach(l => l.classList.remove('dim'));
+    });
+  });
+  // Hovering a source node highlights its links
+  document.querySelectorAll('.snode[data-src]').forEach(n => {
+    n.addEventListener('mouseenter', () => {
+      const src = n.dataset.src;
+      links.forEach(l => l.classList.toggle('dim', l.dataset.src !== src));
+    });
+    n.addEventListener('mouseleave', () => links.forEach(l => l.classList.remove('dim')));
+  });
+  document.querySelectorAll('.snode[data-dst]').forEach(n => {
+    n.addEventListener('mouseenter', () => {
+      const dst = n.dataset.dst;
+      links.forEach(l => l.classList.toggle('dim', l.dataset.dst !== dst));
+    });
+    n.addEventListener('mouseleave', () => links.forEach(l => l.classList.remove('dim')));
+  });
 </script>
 
 </body>
