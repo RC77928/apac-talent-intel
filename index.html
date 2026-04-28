@@ -637,13 +637,24 @@
     color: var(--fg-2);
   }
   .rbar.base {
-    background: var(--fg-3);
-    height: 6px;
+    /* striped pattern + outline so general / market bars never get mistaken for the premium */
+    background:
+      repeating-linear-gradient(
+        45deg,
+        oklch(0.42 0.010 250 / 0.70),
+        oklch(0.42 0.010 250 / 0.70) 4px,
+        oklch(0.30 0.010 250) 4px,
+        oklch(0.30 0.010 250) 8px
+      );
+    height: 8px;
+    border: 1px solid var(--fg-3);
+    border-radius: 1px;
   }
   .rbar.prem {
     background: var(--amber);
-    height: 10px;
-    box-shadow: 0 0 0 1px var(--amber);
+    height: 12px;
+    box-shadow: 0 0 0 1px var(--amber), 0 0 8px oklch(0.80 0.14 75 / 0.35);
+    border-radius: 1px;
   }
   .rbar .rbar__cap {
     position: absolute;
@@ -2257,43 +2268,43 @@
       <div class="kpis">
         <div class="kpi">
           <div class="lbl">Median Premium · Qualified vs. General</div>
-          <div class="val">+108<span class="unit">%</span></div>
-          <div class="delta up"><span class="arr">▲</span> +14pp YoY</div>
+          <div class="val">+42<span class="unit">%</span></div>
+          <div class="delta up"><span class="arr">▲</span> across 6 roles</div>
         </div>
         <div class="kpi">
           <div class="lbl">Highest Premium Role</div>
-          <div class="val" style="font-size:16px">Compliance · DFSA</div>
-          <div class="delta up"><span class="arr">▲</span> +116% vs. general legal</div>
+          <div class="val" style="font-size:16px">Dealer · MAS / ASIC seat</div>
+          <div class="delta up"><span class="arr">▲</span> +50% vs. general dealer</div>
         </div>
         <div class="kpi">
-          <div class="lbl">Arabic Language Uplift</div>
-          <div class="val">+82<span class="unit">%</span></div>
-          <div class="delta up"><span class="arr">▲</span> Account Mgmt band</div>
+          <div class="lbl">Mandarin / Bahasa Uplift</div>
+          <div class="val">+45<span class="unit">%</span></div>
+          <div class="delta up"><span class="arr">▲</span> AM tier · APAC retail</div>
         </div>
         <div class="kpi">
-          <div class="lbl">Open Urgent Reqs · 7d</div>
-          <div class="val">37<span class="unit">roles</span></div>
-          <div class="delta up"><span class="arr">▲</span> +12 WoW</div>
+          <div class="lbl">Singapore Premium</div>
+          <div class="val">~25<span class="unit">%</span></div>
+          <div class="delta up"><span class="arr">▲</span> over Sydney for senior</div>
         </div>
       </div>
 
-      <!-- Range chart -->
+      <!-- Range chart — APAC · USD scale 0-260k -->
       <div class="card" style="margin-bottom:16px">
         <div class="card__hd">
-          <h3>Salary Range × Qualification Premium — AED k / month (P25–P75)</h3>
-          <span class="tag">MENA CFD · 2026 Q1 compiled</span>
+          <h3>Salary Range × Qualification Premium — USD k / year base (P25–P75)</h3>
+          <span class="tag">APAC CFD · 2026 Q2 · Hays + Robert Half + Morgan McKinley + JAC</span>
         </div>
         <div class="card__bd" style="padding:0">
           <div class="rchart">
-            <!-- Axis -->
+            <!-- Axis: USD 0 → 260k, scale 1k = 0.385% -->
             <div class="rchart__axis">
               <div>Role · Function</div>
               <div class="ascale">
-                <span style="left:0%">20k</span>
-                <span style="left:25%">60k</span>
-                <span style="left:50%">100k</span>
-                <span style="left:75%">140k</span>
-                <span style="left:100%">180k</span>
+                <span style="left:0%">USD 0</span>
+                <span style="left:25%">65k</span>
+                <span style="left:50%">130k</span>
+                <span style="left:75%">195k</span>
+                <span style="left:100%">260k</span>
                 <div class="atick">
                   <i style="left:0%"></i><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i><i style="left:100%"></i>
                 </div>
@@ -2301,152 +2312,131 @@
               <div style="text-align:right">Premium Gap</div>
             </div>
 
-            <!-- Account Manager: 25-40 vs 45-75 (Arabic) -->
+            <!-- Account Manager: 45-85 / 65-125 (Mandarin or Bahasa native) -->
             <div class="rrow">
               <div class="rrow__role">
                 <div class="rn">Account Manager</div>
                 <div class="rm">RETAIL CFD · FRONTLINE SALES</div>
               </div>
               <div class="rrow__plot">
-                <!-- baseline: 25→40 ; 20k=0%, 180k=100% ; (v-20)/160 -->
-                <div class="rbar base" style="left:3.125%; width:9.375%">
-                  <span class="rbar__cap">25–40k</span>
+                <div class="rbar base" style="left:17.3%; width:15.4%">
+                  <span class="rbar__cap">45–85k</span>
                 </div>
-                <div class="rbar prem" style="left:15.625%; width:18.75%">
-                  <span class="rbar__cap">AR · 45–75k</span>
+                <div class="rbar prem" style="left:25%; width:23.1%">
+                  <span class="rbar__cap inside">CN/ID · 65–125k</span>
                 </div>
               </div>
               <div class="rrow__gap">
-                <div class="gpct">+88%</div>
-                <div class="glbl">Arabic / GCC native</div>
+                <div class="gpct">+45%</div>
+                <div class="glbl">Mandarin / Bahasa native</div>
               </div>
             </div>
 
-            <!-- Legal/Compliance: 40-60 vs 75-130 (DFSA) -->
+            <!-- Compliance Officer: 65-105 / 90-155 (ASIC RG-105 / MAS RFMC) -->
             <div class="rrow is-hero">
               <div class="rrow__role">
                 <div class="rn">Compliance Officer</div>
-                <div class="rm">DFSA · DIFC REGULATED</div>
+                <div class="rm">ASIC RG-105 · MAS RFMC</div>
               </div>
               <div class="rrow__plot">
-                <div class="rbar base" style="left:12.5%; width:12.5%">
-                  <span class="rbar__cap">40–60k</span>
+                <div class="rbar base" style="left:25%; width:15.4%">
+                  <span class="rbar__cap">65–105k</span>
                 </div>
-                <div class="rbar prem" style="left:34.375%; width:34.375%">
-                  <span class="rbar__cap inside">75–130k</span>
+                <div class="rbar prem" style="left:34.6%; width:25%">
+                  <span class="rbar__cap inside">90–155k</span>
                 </div>
               </div>
               <div class="rrow__gap">
-                <div class="gpct">+116%</div>
-                <div class="glbl">DFSA license holder</div>
+                <div class="gpct">+40%</div>
+                <div class="glbl">8+ yr · ASIC / MAS license</div>
               </div>
             </div>
 
-            <!-- Institutional Sales: 55-85 vs 110-180 (GCC UHNW) -->
-            <div class="rrow is-hero">
-              <div class="rrow__role">
-                <div class="rn">Institutional Sales</div>
-                <div class="rm">B2B · HNW / FAMILY OFFICE</div>
-              </div>
-              <div class="rrow__plot">
-                <div class="rbar base" style="left:21.875%; width:18.75%">
-                  <span class="rbar__cap">55–85k</span>
-                </div>
-                <div class="rbar prem" style="left:56.25%; width:43.75%">
-                  <span class="rbar__cap inside">110–180k</span>
-                </div>
-              </div>
-              <div class="rrow__gap">
-                <div class="gpct">+112%</div>
-                <div class="glbl">Portable GCC book</div>
-              </div>
-            </div>
-
-            <!-- Risk Analyst: 35-55 vs 75-120 (Crypto/Web3) -->
+            <!-- Risk Analyst: 60-100 / 80-138 (Bloomberg + market/credit risk) -->
             <div class="rrow">
               <div class="rrow__role">
                 <div class="rn">Risk Analyst</div>
-                <div class="rm">MARKET · COUNTERPARTY</div>
+                <div class="rm">MARKET · CREDIT · BLOOMBERG</div>
               </div>
               <div class="rrow__plot">
-                <div class="rbar base" style="left:9.375%; width:12.5%">
-                  <span class="rbar__cap">35–55k</span>
+                <div class="rbar base" style="left:23.1%; width:15.4%">
+                  <span class="rbar__cap">60–100k</span>
                 </div>
-                <div class="rbar prem" style="left:34.375%; width:28.125%">
-                  <span class="rbar__cap inside">75–120k</span>
+                <div class="rbar prem" style="left:30.8%; width:22.3%">
+                  <span class="rbar__cap inside">80–138k</span>
                 </div>
               </div>
               <div class="rrow__gap">
-                <div class="gpct">+114%</div>
-                <div class="glbl">VARA / FSRA Crypto</div>
+                <div class="gpct">+35%</div>
+                <div class="glbl">Bloomberg-cert · market risk</div>
               </div>
             </div>
 
-            <!-- Dealer: 30-45 vs 60-95 -->
-            <div class="rrow">
+            <!-- Dealer / Trader: 70-165 / 105-240 (prop-book + ASIC/MAS seat) -->
+            <div class="rrow is-hero">
               <div class="rrow__role">
-                <div class="rn">Dealer · Trading Desk</div>
-                <div class="rm">EXECUTION · MARKET MAKING</div>
+                <div class="rn">Dealer · Trader</div>
+                <div class="rm">DEALING DESK · MARKET MAKING</div>
               </div>
               <div class="rrow__plot">
-                <div class="rbar base" style="left:6.25%; width:9.375%">
-                  <span class="rbar__cap">30–45k</span>
+                <div class="rbar base" style="left:26.9%; width:36.5%">
+                  <span class="rbar__cap inside">70–165k</span>
                 </div>
-                <div class="rbar prem" style="left:25%; width:21.875%">
-                  <span class="rbar__cap inside">60–95k</span>
+                <div class="rbar prem" style="left:40.4%; width:51.9%">
+                  <span class="rbar__cap inside">SG · 105–240k</span>
                 </div>
               </div>
               <div class="rrow__gap">
-                <div class="gpct">+100%</div>
-                <div class="glbl">Prop-book P&amp;L exp.</div>
+                <div class="gpct">+50%</div>
+                <div class="glbl">Prop P&amp;L · ASIC / MAS seat</div>
               </div>
             </div>
 
-            <!-- Marketing: 30-50 vs 65-110 (Arabic GCC perf) -->
+            <!-- Marketing Manager: 55-105 / 75-140 (paid-media + APAC region experience) -->
             <div class="rrow">
               <div class="rrow__role">
                 <div class="rn">Marketing Manager</div>
-                <div class="rm">PERFORMANCE · CRM</div>
+                <div class="rm">PERFORMANCE · CRM · APAC</div>
               </div>
               <div class="rrow__plot">
-                <div class="rbar base" style="left:6.25%; width:12.5%">
-                  <span class="rbar__cap">30–50k</span>
+                <div class="rbar base" style="left:21.2%; width:19.2%">
+                  <span class="rbar__cap">55–105k</span>
                 </div>
-                <div class="rbar prem" style="left:28.125%; width:28.125%">
-                  <span class="rbar__cap inside">65–110k</span>
+                <div class="rbar prem" style="left:28.8%; width:25%">
+                  <span class="rbar__cap inside">75–140k</span>
                 </div>
               </div>
               <div class="rrow__gap">
-                <div class="gpct">+110%</div>
-                <div class="glbl">Arabic GCC growth lead</div>
+                <div class="gpct">+35%</div>
+                <div class="glbl">Paid-media + APAC region</div>
               </div>
             </div>
 
-            <!-- Product: 45-65 vs 90-150 (Crypto/Web3) -->
-            <div class="rrow is-hero">
+            <!-- Product Manager: 70-135 / 100-195 (trading-platform UX) -->
+            <div class="rrow">
               <div class="rrow__role">
                 <div class="rn">Product Manager</div>
-                <div class="rm">BROKERAGE PLATFORM</div>
+                <div class="rm">TRADING PLATFORM · UX</div>
               </div>
               <div class="rrow__plot">
-                <div class="rbar base" style="left:15.625%; width:12.5%">
-                  <span class="rbar__cap">45–65k</span>
+                <div class="rbar base" style="left:26.9%; width:25%">
+                  <span class="rbar__cap inside">70–135k</span>
                 </div>
-                <div class="rbar prem" style="left:43.75%; width:37.5%">
-                  <span class="rbar__cap inside">90–150k</span>
+                <div class="rbar prem" style="left:38.5%; width:36.5%">
+                  <span class="rbar__cap inside">100–195k</span>
                 </div>
               </div>
               <div class="rrow__gap">
-                <div class="gpct">+121%</div>
-                <div class="glbl">Web3 / tokenised CFD</div>
+                <div class="gpct">+45%</div>
+                <div class="glbl">Trading-platform UX · SG senior</div>
               </div>
             </div>
 
             <!-- Legend -->
             <div class="rlegend">
-              <span><span class="rsw base"></span>General role · market P25–P75</span>
-              <span><span class="rsw prem"></span>Qualified / specialized · premium P25–P75</span>
-              <span style="margin-left:auto">Source · aggregated from LinkedIn MENA, GulfTalent, Hays Dubai · n=412 postings</span>
+              <span><span class="rsw base"></span>General role · market P25–P75 base</span>
+              <span><span class="rsw prem"></span>Qualified / specialized · premium P25–P75 base</span>
+              <span style="margin-left:auto">Sources · Hays APAC + Australia FY25/26 · Robert Half APAC · Morgan McKinley · JAC Asia · Levels.fyi SG</span>
             </div>
           </div>
         </div>
