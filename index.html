@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>APAC Talent Mobility Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: oklch(0.14 0.008 250);
+    --bg-1: oklch(0.18 0.009 250);
+    --bg-2: oklch(0.21 0.010 250);
+    --bg-3: oklch(0.25 0.011 250);
+    --line: oklch(0.30 0.010 250);
+    --line-soft: oklch(0.25 0.010 250);
+    --fg-0: oklch(0.97 0.005 250);
+    --fg-1: oklch(0.78 0.008 250);
+    --fg-2: oklch(0.58 0.010 250);
+    --fg-3: oklch(0.42 0.010 250);
+    --amber: oklch(0.80 0.14 75);
+    --amber-dim: oklch(0.80 0.14 75 / 0.18);
+    --cyan: oklch(0.76 0.11 210);
+    --cyan-dim: oklch(0.76 0.11 210 / 0.15);
+    --pos: oklch(0.78 0.13 150);
+    --neg: oklch(0.70 0.18 25);
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Helvetica, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg-0); color: var(--fg-0);
+    font-family: var(--sans); font-size: 13px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased; letter-spacing: -0.005em;
+    min-height: 100vh;
+  }
+
+  .hd {
+    background: var(--bg-1); border-bottom: 1px solid var(--line);
+    padding: 14px 32px; display: flex; align-items: center; gap: 24px;
+  }
+  .hd__brand {
+    display: flex; align-items: center; gap: 10px;
+    padding-right: 24px; border-right: 1px solid var(--line);
+  }
+  .hd__mark {
+    width: 22px; height: 22px;
+    border: 1.5px solid var(--amber); position: relative; transform: rotate(45deg);
+  }
+  .hd__mark::after {
+    content: ""; position: absolute; inset: 3px;
+    background: var(--amber); opacity: 0.6;
+  }
+  .hd__wordmark {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--fg-1); text-transform: uppercase;
+  }
+  .hd__title {
+    font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: var(--fg-0);
+  }
+  .hd__title small {
+    display: block; font-size: 10px; font-family: var(--mono);
+    font-weight: 500; color: var(--fg-2); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-top: 2px;
+  }
+  .hd__spacer { flex: 1; }
+  .hd__meta {
+    display: flex; align-items: center; gap: 18px; font-family: var(--mono);
+    font-size: 11px; color: var(--fg-2); letter-spacing: 0.04em;
+  }
+  .hd__meta b { color: var(--fg-0); font-weight: 600; }
+  .hd__pill {
+    display: inline-block; padding: 3px 8px; background: var(--amber-dim);
+    color: var(--amber); border-radius: 3px; font-weight: 600;
+  }
+
+  .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .section { margin-bottom: 36px; }
+  .section__title {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line-soft);
+  }
+  .section__title h2 {
+    margin: 0; font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--fg-0); text-transform: uppercase;
+  }
+  .section__title small {
+    font-family: var(--mono); font-size: 11px; color: var(--fg-2);
+    letter-spacing: 0.05em;
+  }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .kpi {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .kpi__label {
+    font-family: var(--mono); font-size: 10px; color: var(--fg-2);
+    letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .kpi__value {
+    font-family: var(--mono); font-size: 28px; font-weight: 600;
+    color: var(--fg-0); line-height: 1;
+  }
+  .kpi__sub {
+    margin-top: 6px; font-size: 11px; color: var(--fg-2); font-family: var(--mono);
+  }
+
+  .fn-row {
+    display: grid; grid-template-columns: 180px 1fr 60px;
+    align-items: center; gap: 12px; padding: 6px 0;
+  }
+  .fn-row__label { color: var(--fg-1); font-size: 12px; }
+  .fn-row__bar {
+    height: 8px; background: var(--bg-3); border-radius: 2px; position: relative;
+    overflow: hidden;
+  }
+  .fn-row__fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--cyan); border-radius: 2px;
+  }
+  .fn-row__fill--hot { background: var(--amber); }
+  .fn-row__count {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    color: var(--fg-0); text-align: right;
+  }
+
+  .co-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .co {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 6px; padding: 14px;
+  }
+  .co--hot { border-color: var(--amber); }
+  .co__hd {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line-soft);
+  }
+  .co__logo {
+    width: 32px; height: 32px; border-radius: 4px;
+    background: var(--bg-3); color: var(--fg-1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .co__name { font-size: 13px; font-weight: 600; color: var(--fg-0); }
+  .co__zone {
+    font-family: var(--mono); font-size: 10px; color: var(--fg-2);
+    letter-spacing: 0.06em; margin-top: 2px;
+  }
+  .co__total {
+    margin-left: auto; font-family: var(--mono); font-size: 18px;
+    font-weight: 600; color: var(--fg-0);
+  }
+  .co--hot .co__total { color: var(--amber); }
+  .co__row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 0; font-size: 12px;
+  }
+  .co__row span:first-child { color: var(--fg-1); }
+  .co__row span:last-child {
+    font-family: var(--mono); font-weight: 500; color: var(--fg-0);
+  }
+
+  .country-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .country {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 4px;
+    padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .country__code {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--fg-1); letter-spacing: 0.08em;
+  }
+  .country__count {
+    font-family: var(--mono); font-size: 14px; font-weight: 600;
+    color: var(--fg-0);
+  }
+
+  .ft {
+    margin-top: 48px; padding: 20px 32px; border-top: 1px solid var(--line);
+    color: var(--fg-2); font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+
+  .empty {
+    background: var(--bg-2); border: 1px dashed var(--line);
+    border-radius: 6px; padding: 24px; color: var(--fg-2);
+    font-family: var(--mono); font-size: 12px; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd__brand">
+    <div class="hd__mark"></div>
+    <div>
+      <div class="hd__wordmark">VT Markets</div>
+      <div class="hd__title">APAC Talent Mobility<small>HR Talent Intelligence</small></div>
+    </div>
+  </div>
+  <div class="hd__spacer"></div>
+  <div class="hd__meta">
+    <span>Region · <b>Asia-Pacific</b></span>
+    <span>Source · <b>cfd-talent-intel-core</b></span>
+    <span class="hd__pill" id="hdGenerated">loading…</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <section class="section">
+    <div class="section__title">
+      <h2>Snapshot</h2>
+      <small>this week</small>
+    </div>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi__label">Open positions</div>
+        <div class="kpi__value" id="kpiTotal">—</div>
+        <div class="kpi__sub" id="kpiTotalSub"></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Hot companies</div>
+        <div class="kpi__value" id="kpiHot">—</div>
+        <div class="kpi__sub">≥ 5 postings</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Companies tracked</div>
+        <div class="kpi__value" id="kpiCompanies">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Markets covered</div>
+        <div class="kpi__value" id="kpiZones">—</div>
+        <div class="kpi__sub">countries / zones</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__title">
+      <h2>Function distribution</h2>
+      <small>postings by HR function</small>
+    </div>
+    <div id="fnList" class="empty">loading…</div>
+  </section>
+
+  <section class="section">
+    <div class="section__title">
+      <h2>Companies</h2>
+      <small>sorted by total postings · gold border = hot (≥ 5)</small>
+    </div>
+    <div id="coGrid" class="empty">loading…</div>
+  </section>
+
+  <section class="section">
+    <div class="section__title">
+      <h2>Geography</h2>
+      <small>postings by country / zone</small>
+    </div>
+    <div id="countryGrid" class="empty">loading…</div>
+  </section>
+
+  <footer class="ft">
+    <div>Data · cfd-talent-intel-core (Workable + Greenhouse + Workday + Lever + Ashby + SmartRecruiters)</div>
+    <div>Refreshes Mondays 08:30 SGT</div>
+  </footer>
+
+</main>
+
+<script>
+  const FEED_URL = 'https://cfd-talent-intel-core.rob77928.workers.dev/data/apac.json';
+
+  function abbrev(name) {
+    const parts = name.replace(/[.()]/g, '').split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return parts.slice(0, 3).map(p => p[0]).join('').toUpperCase();
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toISOString().slice(0, 10);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  fetch(FEED_URL, { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(applyData)
+    .catch(err => {
+      console.warn('[apac] feed not loaded:', err.message);
+      document.getElementById('hdGenerated').textContent = 'feed offline';
+    });
+
+  function applyData(data) {
+    if (!data || !Array.isArray(data.records)) return;
+
+    const totalJobs = data.records.reduce((s, r) => s + r.count, 0);
+    const companies = {};
+    const fnTotals = {};
+    const zoneTotals = {};
+    data.records.forEach(r => {
+      if (!companies[r.company]) companies[r.company] = { name: r.company, total: 0, hot: false, byFn: {}, zones: new Set() };
+      const c = companies[r.company];
+      c.total += r.count;
+      if (r.hot) c.hot = true;
+      c.byFn[r.function] = (c.byFn[r.function] || 0) + r.count;
+      if (r.zone) c.zones.add(r.zone);
+      fnTotals[r.function] = (fnTotals[r.function] || 0) + r.count;
+      zoneTotals[r.zone] = (zoneTotals[r.zone] || 0) + r.count;
+    });
+    const companyList = Object.values(companies).sort((a, b) => b.total - a.total);
+    companyList.forEach(c => { if (c.total >= 5) c.hot = true; });
+    const hotCount = companyList.filter(c => c.hot).length;
+
+    document.getElementById('hdGenerated').textContent = 'updated ' + (fmtDate(data.generated_at) || '—');
+
+    document.getElementById('kpiTotal').textContent = totalJobs;
+    document.getElementById('kpiTotalSub').textContent = data.record_count + ' records';
+    document.getElementById('kpiHot').textContent = hotCount;
+    document.getElementById('kpiCompanies').textContent = companyList.length;
+    document.getElementById('kpiZones').textContent = Object.keys(zoneTotals).length;
+
+    const fnEntries = Object.entries(fnTotals).sort((a, b) => b[1] - a[1]);
+    const fnMax = fnEntries[0]?.[1] || 1;
+    const fnHtml = fnEntries.map(([fn, count]) => {
+      const pct = (count / fnMax * 100).toFixed(1);
+      const isHot = count >= fnMax * 0.5;
+      return `
+        <div class="fn-row">
+          <div class="fn-row__label">${escapeHtml(fn)}</div>
+          <div class="fn-row__bar">
+            <div class="fn-row__fill ${isHot ? 'fn-row__fill--hot' : ''}" style="width:${pct}%"></div>
+          </div>
+          <div class="fn-row__count">${count}</div>
+        </div>`;
+    }).join('');
+    const fnEl = document.getElementById('fnList');
+    fnEl.className = '';
+    fnEl.innerHTML = fnHtml || '<div class="empty">no data</div>';
+
+    const coHtml = companyList.map(c => {
+      const fnRows = Object.entries(c.byFn)
+        .sort((a, b) => b[1] - a[1])
+        .map(([fn, n]) => `<div class="co__row"><span>${escapeHtml(fn)}</span><span>${n}</span></div>`)
+        .join('');
+      const zones = [...c.zones].sort().join(' · ');
+      return `
+        <div class="co ${c.hot ? 'co--hot' : ''}">
+          <div class="co__hd">
+            <div class="co__logo">${escapeHtml(abbrev(c.name))}</div>
+            <div>
+              <div class="co__name">${escapeHtml(c.name)}</div>
+              <div class="co__zone">${escapeHtml(zones)}</div>
+            </div>
+            <div class="co__total">${c.total}</div>
+          </div>
+          ${fnRows}
+        </div>`;
+    }).join('');
+    const coEl = document.getElementById('coGrid');
+    coEl.className = 'co-grid';
+    coEl.innerHTML = coHtml || '<div class="empty">no companies</div>';
+
+    const zoneEntries = Object.entries(zoneTotals).sort((a, b) => b[1] - a[1]);
+    const zoneHtml = zoneEntries.map(([z, n]) => `
+      <div class="country">
+        <span class="country__code">${escapeHtml(z)}</span>
+        <span class="country__count">${n}</span>
+      </div>`).join('');
+    const czEl = document.getElementById('countryGrid');
+    czEl.className = 'country-grid';
+    czEl.innerHTML = zoneHtml || '<div class="empty">no zones</div>';
+  }
+</script>
+
+</body>
+</html>
