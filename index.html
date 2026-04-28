@@ -719,6 +719,27 @@
   /* APAC: hide MENA case-study narrative blocks (Kanban + Executive Alerts) */
   .narrative-hidden { display: none !important; }
 
+  /* ===== Sub-region blocks (ANZ / East Asia / ASEAN / South Asia) ===== */
+  .subregion-block { margin-bottom: 18px; }
+  .subregion-block:last-child { margin-bottom: 0; }
+  .subregion-block__title {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--fg-1); letter-spacing: 0.10em; text-transform: uppercase;
+    padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px solid var(--line-soft);
+  }
+  .subregion-block__title span {
+    font-weight: 400; color: var(--fg-3); letter-spacing: 0.04em;
+    text-transform: none; margin-left: 6px;
+  }
+  .subregion-block .country-grid:empty::before {
+    content: "no live postings this week";
+    grid-column: 1 / -1;
+    padding: 10px 12px;
+    background: var(--bg-2); border: 1px dashed var(--line); border-radius: 4px;
+    color: var(--fg-3); font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.06em; text-align: center;
+  }
+
   /* ===== Country grid (APAC-specific) ===== */
   .country-grid {
     display: grid;
@@ -1925,14 +1946,29 @@
         </div>
       </div>
 
-      <!-- ====== Country breakdown ====== -->
+      <!-- ====== Country breakdown — grouped by sub-region ====== -->
       <div class="card" style="margin-top:16px">
         <div class="card__hd">
           <h3>Country Breakdown — Live ATS Postings</h3>
           <span class="tag" id="countryGridTag">loading…</span>
         </div>
         <div class="card__bd">
-          <div class="country-grid" id="countryGrid"></div>
+          <div class="subregion-block">
+            <div class="subregion-block__title">ANZ <span>· Australia + New Zealand</span></div>
+            <div class="country-grid" id="countryGridAnz"></div>
+          </div>
+          <div class="subregion-block">
+            <div class="subregion-block__title">East Asia <span>· Hong Kong / Japan / Taiwan / South Korea / China</span></div>
+            <div class="country-grid" id="countryGridEastAsia"></div>
+          </div>
+          <div class="subregion-block">
+            <div class="subregion-block__title">ASEAN Spotlight <span>· 10 markets — Singapore + Indochina + Maritime SE Asia</span></div>
+            <div class="country-grid" id="countryGridAsean"></div>
+          </div>
+          <div class="subregion-block">
+            <div class="subregion-block__title">South Asia <span>· India / Bangladesh / Pakistan / Sri Lanka</span></div>
+            <div class="country-grid" id="countryGridSouthAsia"></div>
+          </div>
         </div>
       </div>
 
@@ -2789,9 +2825,15 @@
       ID: 'Indonesia', IN: 'India', BD: 'Bangladesh', PK: 'Pakistan', LK: 'Sri Lanka',
     };
 
+    var SUBREGIONS = {
+      anz:        { codes: ['AU', 'NZ'],                                                                  gridId: 'countryGridAnz' },
+      eastAsia:   { codes: ['HK', 'JP', 'TW', 'KR', 'CN', 'MO'],                                          gridId: 'countryGridEastAsia' },
+      asean:      { codes: ['SG', 'MY', 'TH', 'VN', 'PH', 'ID', 'KH', 'LA', 'MM', 'BN'],                  gridId: 'countryGridAsean' },
+      southAsia:  { codes: ['IN', 'BD', 'PK', 'LK'],                                                      gridId: 'countryGridSouthAsia' },
+    };
+
     function applyCountryGrid(data) {
-      var grid = document.getElementById('countryGrid');
-      if (!grid || !data || !Array.isArray(data.records)) return;
+      if (!data || !Array.isArray(data.records)) return;
 
       var byCountry = {};
       data.records.forEach(function (rec) {
@@ -2800,28 +2842,63 @@
         byCountry[rec.zone].jobs += rec.count;
         byCountry[rec.zone].companies[rec.company] = true;
       });
-      var entries = Object.keys(byCountry).map(function (z) {
-        return { code: z, jobs: byCountry[z].jobs, companies: Object.keys(byCountry[z].companies).length };
-      }).sort(function (a, b) { return b.jobs - a.jobs; });
 
-      var totalJobs = entries.reduce(function (s, e) { return s + e.jobs; }, 0);
-
-      grid.innerHTML = entries.map(function (e) {
-        var name = COUNTRY_NAMES[e.code] || e.code;
-        var hot = e.jobs >= 30;
+      function renderCard(code, jobs, companies) {
+        var name = COUNTRY_NAMES[code] || code;
+        var hot = jobs >= 30;
         return ''
           + '<div class="country-card' + (hot ? ' is-hot' : '') + '">'
           +   '<div class="country-card__hd">'
-          +     '<span class="country-card__code">' + e.code + '</span>'
+          +     '<span class="country-card__code">' + code + '</span>'
           +     '<span class="country-card__name">' + name + '</span>'
           +   '</div>'
-          +   '<div class="country-card__total">' + e.jobs + '</div>'
-          +   '<div class="country-card__sub">' + e.companies + ' broker' + (e.companies > 1 ? 's' : '') + '</div>'
+          +   '<div class="country-card__total">' + jobs + '</div>'
+          +   '<div class="country-card__sub">' + companies + ' broker' + (companies > 1 ? 's' : '') + '</div>'
           + '</div>';
-      }).join('');
+      }
+
+      var totalJobs = 0, totalMarkets = 0;
+      Object.keys(SUBREGIONS).forEach(function (key) {
+        var conf = SUBREGIONS[key];
+        var grid = document.getElementById(conf.gridId);
+        if (!grid) return;
+
+        // Show every country in the sub-region — even those with zero postings
+        // — so the ASEAN block visibly lists all 10 markets including the
+        // Cambodia / Laos / Myanmar / Brunei tail.
+        var html = conf.codes.map(function (code) {
+          var bc = byCountry[code];
+          var jobs = bc ? bc.jobs : 0;
+          var companies = bc ? Object.keys(bc.companies).length : 0;
+          if (jobs > 0) { totalJobs += jobs; totalMarkets++; }
+          return renderCard(code, jobs, companies);
+        }).join('');
+        grid.innerHTML = html;
+      });
+
+      // Any zone present in the feed but not mapped to a sub-region (e.g. a
+      // future code we haven't classified yet) — render it under ASEAN as a
+      // safety net so it's still visible.
+      var assignedCodes = new Set();
+      Object.values(SUBREGIONS).forEach(function (conf) {
+        conf.codes.forEach(function (c) { assignedCodes.add(c); });
+      });
+      var unmapped = Object.keys(byCountry).filter(function (code) { return !assignedCodes.has(code); });
+      if (unmapped.length) {
+        var aseanGrid = document.getElementById('countryGridAsean');
+        if (aseanGrid) {
+          aseanGrid.insertAdjacentHTML('beforeend',
+            unmapped.map(function (code) {
+              var bc = byCountry[code];
+              totalJobs += bc.jobs; totalMarkets++;
+              return renderCard(code, bc.jobs, Object.keys(bc.companies).length);
+            }).join('')
+          );
+        }
+      }
 
       var tag = document.getElementById('countryGridTag');
-      if (tag) tag.textContent = entries.length + ' markets · ' + totalJobs + ' postings · gold = hot (≥30)';
+      if (tag) tag.textContent = totalMarkets + ' markets · ' + totalJobs + ' postings · gold = hot (≥30)';
     }
 
     function applyData(data) {
